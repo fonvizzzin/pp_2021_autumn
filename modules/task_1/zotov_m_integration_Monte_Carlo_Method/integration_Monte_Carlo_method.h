@@ -11,10 +11,18 @@ int getParallelOperations(std::vector<int> global_vec,
 int getSequentialOperations(std::vector<int> vec, const std::string& ops);
 */
 
-double integralMonteCarlo(double a, double b, double c, double d, int n);
+double integralMonteCarlo(double a, double b, double h, int n, double(*f)(double));
 
-double integralParallel(double a, double b, double c, double d, int n);
+double integralParallel(double a, double b, double h, int n, double(*f)(double));
 
-double f(double x);
+double f1(double x);
+
+double f2(double x);
+
+double f3(double x);
+
+double f4(double x);
+
+double f5(double x);
 
 #endif  // MODULES_TASK_1_NESTEROV_A_TEST_TASK_1_OPS_MPI_H_
