@@ -1,68 +1,70 @@
 // Copyright 2018 Nesterov Alexander
 #include <mpi.h>
-#include <vector>
+#include <iostream>
 #include <string>
 #include <random>
 #include <algorithm>
 #include "../../../modules/task_1/zotov_m_integration_Monte_Carlo_method/integration_Monte_Carlo_method.h"
 
 
-std::vector<int> getRandomVector(int sz) {
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    std::vector<int> vec(sz);
-    for (int  i = 0; i < sz; i++) { vec[i] = gen() % 100; }
-    return vec;
+double f1(double x)
+{
+    return pow(x, 2);
+}
+double f2(double x)
+{
+    return x / 2 + 1;
+}
+double f3(double x) {
+    return cos(x);
+}
+double f4(double x) {
+    return sin(x) * sin(x);
+}
+double f5(double x) {
+    return pow(x, 2) / 3 + 1;
 }
 
-int getSequentialOperations(std::vector<int> vec, const std::string& ops) {
-    const int  sz = vec.size();
-    int reduction_elem = 0;
-    if (ops == "+") {
-        for (int  i = 0; i < sz; i++) {
-            reduction_elem += vec[i];
-        }
-    } else if (ops == "-") {
-        for (int  i = 0; i < sz; i++) {
-            reduction_elem -= vec[i];
-        }
-    } else if (ops == "max") {
-        reduction_elem = vec[0];
-        for (int  i = 1; i < sz; i++) {
-            reduction_elem = std::max(reduction_elem, vec[i]);
+double integralMonteCarlo(double a, double b, double h, int n, double(*f)(double))
+{
+    srand(time(NULL));
+    int inCount = 0;
+    double res;
+    double x;
+    double y;
+
+    for (size_t i = 0; i < n; i++) {
+        x = rand() / static_cast<double>(RAND_MAX) * (b - a) + a;
+        y = rand() / static_cast<double>(RAND_MAX) * h;
+        if (y < f(x)) {
+            inCount++;
         }
     }
-    return reduction_elem;
+    res = (b - a) * h * static_cast<double>(inCount) / n;
+    return res;
 }
 
-int getParallelOperations(std::vector<int> global_vec,
-                          int count_size_vector, const std::string& ops) {
-    int size, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int delta = count_size_vector / size;
+double integralParallel(double a, double b, double h, int n, double(*f)(double))
+{
+    srand(time(NULL));
+    int ProcRank, ProcNum;
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    int inCount = 0, count = 0;
+    double res;
+    double x;
+    double y;
 
-    if (rank == 0) {
-        for (int proc = 1; proc < size; proc++) {
-            MPI_Send(global_vec.data() + proc * delta, delta,
-                        MPI_INT, proc, 0, MPI_COMM_WORLD);
+    for (size_t i = 0; i < n; i += ProcNum) {
+        x = rand() / static_cast<double>(RAND_MAX) * (b - a) + a;
+        y = rand() / static_cast<double>(RAND_MAX) * h;
+        if (y < f(x)) {
+            inCount++;
         }
-    }
 
-    std::vector<int> local_vec(delta);
-    if (rank == 0) {
-        local_vec = std::vector<int>(global_vec.begin(),
-                                     global_vec.begin() + delta);
-    } else {
-        MPI_Status status;
-        MPI_Recv(local_vec.data(), delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
+    MPI_Reduce(&inCount, &count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+ 
+    return res = (b - a) * h * static_cast<double>(count) / n;
 
-    int global_sum = 0;
-    int local_sum = getSequentialOperations(local_vec, ops);
-    MPI_Op op_code = MPI_OP_NULL;
-    if (ops == "+" || ops == "-") { op_code = MPI_SUM; }
-    if (ops == "max") { op_code = MPI_MAX; }
-    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, op_code, 0, MPI_COMM_WORLD);
-    return global_sum;
 }

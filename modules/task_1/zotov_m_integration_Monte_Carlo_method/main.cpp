@@ -1,102 +1,80 @@
-// Copyright 2018 Nesterov Alexander
+/// Copyright 2018 Nesterov Alexander
 #include <gtest/gtest.h>
-#include <vector>
+#include <iostream>
+#include <iomanip>
 #include "./integration_Monte_Carlo_method.h"
 #include <gtest-mpi-listener.hpp>
 
-TEST(Parallel_Operations_MPI, Test_Sum) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (rank == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_sum = getParallelOperations(global_vec, count_size_vector, "+");
-
-    if (rank == 0) {
-        int reference_sum = getSequentialOperations(global_vec, "+");
-        ASSERT_EQ(reference_sum, global_sum);
+TEST(Parallel_MPI, Test_func_1) {
+    int ProcRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    double resPar, resSeq;
+    double a = 0, b = 2, h = 6;
+    int n = 50000;
+    resPar = integralParallel(a, b, h, n, f1);
+    if (ProcRank == 0) {
+        resSeq = integralMonteCarlo(a, b, h, n, f1);
+        EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Diff) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
 
-    if (rank == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_diff = getParallelOperations(global_vec, count_size_vector, "-");
-
-    if (rank == 0) {
-        int reference_diff = getSequentialOperations(global_vec, "-");
-        ASSERT_EQ(reference_diff, global_diff);
+TEST(Parallel_MPI, Test_funct_2) {
+    int ProcRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    double resPar, resSeq;
+    double a = 5, b = 10, h = 6;
+    int n = 100000;
+    resPar = integralParallel(a, b, h, n, f2);
+    if (ProcRank == 0) {
+        resSeq = integralMonteCarlo(a, b, h, n, f2);
+        EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Diff_2) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (rank == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_diff = getParallelOperations(global_vec, count_size_vector, "-");
-
-    if (rank == 0) {
-        int reference_diff = getSequentialOperations(global_vec, "-");
-        ASSERT_EQ(reference_diff, global_diff);
+TEST(Parallel_MPI, Test_funct_3) {
+    int ProcRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    double resPar, resSeq;
+    double a = 0, b = 3, h = 1;
+    int n = 100000;
+    resPar = integralParallel(a, b, h, n, f3);
+    if (ProcRank == 0) {
+        resSeq = integralMonteCarlo(a, b, h, n, f3);
+        EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Max) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (rank == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_max;
-    global_max = getParallelOperations(global_vec, count_size_vector, "max");
-
-    if (rank == 0) {
-        int reference_max = getSequentialOperations(global_vec, "max");
-        ASSERT_EQ(reference_max, global_max);
+TEST(Parallel_MPI, Test_funct_4) {
+    int ProcRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    double resPar, resSeq;
+    double a = 0, b = 3, h = 1;
+    int n = 100000;
+    resPar = integralParallel(a, b, h, n, f4);
+    if (ProcRank == 0) {
+        resSeq = integralMonteCarlo(a, b, h, n, f4);
+        EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
 
-TEST(Parallel_Operations_MPI, Test_Max_2) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::vector<int> global_vec;
-    const int count_size_vector = 120;
-
-    if (rank == 0) {
-        global_vec = getRandomVector(count_size_vector);
-    }
-
-    int global_max;
-    global_max = getParallelOperations(global_vec, count_size_vector, "max");
-
-    if (rank == 0) {
-        int reference_max = getSequentialOperations(global_vec, "max");
-        ASSERT_EQ(reference_max, global_max);
+TEST(Parallel_MPI, Test_funct_5) {
+    int ProcRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    double resPar, resSeq;
+    double a = 0, b = 6, h = 10;
+    int n = 200000;
+    resPar = integralParallel(a, b, h, n, f5);
+    if (ProcRank == 0) {
+        resSeq = integralMonteCarlo(a, b, h, n, f5);
+        EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
+
+
 
 int main(int argc, char** argv) {
+
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
 
@@ -109,4 +87,6 @@ int main(int argc, char** argv) {
 
     listeners.Append(new GTestMPIListener::MPIMinimalistPrinter);
     return RUN_ALL_TESTS();
+
+    return 0;
 }
