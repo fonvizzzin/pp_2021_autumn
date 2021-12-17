@@ -1,91 +1,88 @@
 // Copyright 2021 Oskin Georgii
-#include "../../../modules/task_1/oskin_g_min_matrix_row_mpi/min_matrix_row.h"
+#include "C:/Users/user/Desktop/MPI/pp_2021_autumn/modules/task_1/oskin_g_min_matrix_row/min_matrix_row.h"
 
 #include <mpi.h>
 
 #include <algorithm>
+#include <iostream>
 #include <random>
 #include <string>
+#include <vector>
 
-int** getRandomMatrix(int m, int n) {
+std::vector<std::vector<int>> getRandMatrix(int m, int n) {
   std::random_device dev;
   std::mt19937 gen(dev());
-  int** matrix = new int*[m];
-  for (int i = 0; i < m; i++) {
-    matrix[i] = new int[n];
-  }
+  std::vector<std::vector<int>> matrix(m, std::vector<int>(n));
   for (int i = 0; i < m; i++) {
     for (int j = 0; j < n; j++) {
-      matrix[i][j] = gen() % 1000;
+      matrix[i][j] = gen() % 100;
     }
   }
   return matrix;
 }
 
-int findMinNonParallel(int** mat, int m, int n) {
-  int tmp_min = mat[0][0];
-  for (int i = 0; i < m; i++) {
-    for (int j = 0; j < n; j++) {
-      if (tmp_min > mat[i][j]) tmp_min = mat[i][j];
+int getLocalMinimum(std::vector<int> vec, int n) {
+  int min;
+  if (vec.size() == 0) {
+    min = NULL;
+  }
+  min = vec[0];
+  if (vec.size() > 1) {
+    for (int i = 0; i < n; i++) {
+      if (vec[i] < min) min = vec[i];
     }
   }
-  return tmp_min;
-}
 
-int getLocalMinimum(int* vec, int n) {
-  int min = vec[0];
-  for (int i = 0; i < n; i++) {
-    if (vec[i] < min) min = vec[i];
-  }
   return min;
 }
 
-void initiateThreadAlloc(int m) {
-  int size, rank;
-
-  MPI_Comm_size(MPI_COMM_WORLD, &size);
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-  int base_vec = floor(m / size);
-  int delta = m % size;
-  int last = base_vec + delta;
-  for (int i = 1; i < size; i++) {
-    if (i != (size - 1))
-      MPI_Send(&base_vec, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
-    else {
-      MPI_Send(&last, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
-    }
+void findMinNonParallel(std::vector<std::vector<int>> mat, int m, int n,
+                        std::vector<int> result) {
+  for (int i = 0; i < m; i++) {
+    result[i] = getLocalMinimum(mat[i], n);
   }
 }
 
-int getParallelOperations(int** g_matrix, int m, int n) {
-  int size, rank, res;
+void getParallelOperations(std::vector<std::vector<int>> g_matrix, int m, int n,
+                           std::vector<int> res) {
+  int size, rank;
   MPI_Status status;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  int vec_size = floor(m / size);
-  int adder = m % size;
-  int tmp_min = 0;
-  int* numOfRows = new int[size];
-  int* starters = new int[m];
-  if (rank == 0) {
-    initiateThreadAlloc(m);
+  int vec_size = floor(m / size - 1);
+  int adder = m % size - 1;
+  int count = 0;
+  int temp_rows = 0;
+  int result = 0;
 
-    MPI_Recv(&numOfRows[rank], 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD,
-             &status);
-
-    for (int i = 0; i < size; i++) {
-      starters[i] = i * vec_size;
+  if (rank != 0) {
+    if (rank != size - 1) {
+      for (int i = (rank - 1) * vec_size; i < vec_size * rank; i++) {
+        temp_rows = getLocalMinimum(g_matrix[i], n);
+        MPI_Send(&temp_rows, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+      }
     }
-    starters[rank - 1] += adder;
   }
-  int* tmp_ar = new int[numOfRows[rank]];
-  MPI_Scatterv(g_matrix, numOfRows, starters, MPI_INT, tmp_ar, numOfRows[rank],
-               MPI_INT, 0, MPI_COMM_WORLD);
+  if (rank == size - 1) {
+    for (int i = (rank - 1) * vec_size; i < m; i++) {
+      temp_rows = getLocalMinimum(g_matrix[i], n);
+      MPI_Send(&temp_rows, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
+  }
 
-  tmp_min = getLocalMinimum(tmp_ar, numOfRows[rank]);
-
-  MPI_Reduce(&tmp_min, &res, 1, MPI_INT, MPI_MIN, 0, MPI_COMM_WORLD);
-
-  return res;
+  if (rank == 0) {
+    for (int i = 1; i < size; i++) {
+      if (i != size - 1) {
+        for (int j = (i - 1) * vec_size; j < i * vec_size; j++) {
+          MPI_Recv(&result, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
+          res[j] = result;
+        }
+      } else {
+        for (int j = (i - 1) * vec_size; j < m; j++) {
+          MPI_Recv(&result, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
+          res[j] = result;
+        }
+      }
+    }
+  }
 }
