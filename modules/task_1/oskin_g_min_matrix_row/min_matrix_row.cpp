@@ -47,8 +47,6 @@ void getParallelOperations(std::vector<std::vector<int>> g_matrix, int m, int n,
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int vec_size = floor(m / size - 1);
-  int adder = m % size - 1;
-  int count = 0;
   int temp_rows = 0;
   int result = 0;
 
