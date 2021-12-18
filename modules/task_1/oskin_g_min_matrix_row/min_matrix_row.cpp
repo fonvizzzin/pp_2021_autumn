@@ -1,5 +1,5 @@
 // Copyright 2021 Oskin Georgii
-#include "C:/Users/user/Desktop/MPI/pp_2021_autumn/modules/task_1/oskin_g_min_matrix_row/min_matrix_row.h"
+#include "../../../modules/task_1/oskin_g_min_matrix_row/min_matrix_row.h"
 
 #include <mpi.h>
 
