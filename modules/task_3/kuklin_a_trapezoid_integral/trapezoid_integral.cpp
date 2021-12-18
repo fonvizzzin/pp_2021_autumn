@@ -74,8 +74,9 @@ double CalculateTrapezoidIntegral(Func* func, std::vector<double> lower_bound,
       if (curr_seg[j] == segments_count) {
         curr_seg[j] = 0;
         ++curr_seg[j + 1];
-      } else
+      } else {
         break;
+      }
     }
   }
   for (std::size_t i = 0; i < variables_count; i++) res *= height[i];
