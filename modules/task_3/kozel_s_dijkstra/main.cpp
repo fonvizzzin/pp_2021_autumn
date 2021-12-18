@@ -4,7 +4,7 @@
 #include <gtest-mpi-listener.hpp>
 
 bool test(int size) {
-    int flag;
+    bool flag = true;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
 
