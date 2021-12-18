@@ -23,6 +23,6 @@ struct matrix_CCS {
 std::vector<double> random_matrix(int rows, int cols);
 matrix_CCS build_data_of_matrix_CCS(const std::vector<double>& _matrix,
                                     const int& _rows, const int& _cols);
-std::vector<double> parallel_multiplication(matrix_CCS &A, matrix_CCS &B);
+std::vector<double> parallel_multiplication(const matrix_CCS &A, const matrix_CCS &B);
 
 #endif  // MODULES_TASK_3_LAZAREV_A_CCS_CCS_CCS_H_
