@@ -109,7 +109,7 @@ int** GrahamParallel(int** points, int size, int* size_shell) {
     int proc = size / 3 > proc_count ? proc_count : size / 3;
     int whole = size / proc;
     int remains = size % proc;
-    int num_elem_block = whole + (proc_rank < remains ? 1 : 0);
+    int num_elem_block = (proc_rank < proc ? whole : 0) + (proc_rank < remains ? 1 : 0);
     int* rcount = new int[num_elem_block * 2];
     int* sendcounts = nullptr;
     int* displs = nullptr;
@@ -122,8 +122,10 @@ int** GrahamParallel(int** points, int size, int* size_shell) {
         }
         sendcounts = new int[proc_count];
         displs = new int[proc_count];
-        for (int i = 0; i < proc_count; i++)
+        for (int i = 0; i < proc; i++)
             sendcounts[i] = whole * 2;
+        for (int i = proc; i < proc_count; i++)
+            sendcounts[i] = 0;
         for (int i = 0; i < remains; i++)
             sendcounts[i] += 2;
         displs[0] = 0;

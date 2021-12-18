@@ -52,18 +52,16 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_10_points) {
         int size_shell_par;
         int* p_ssp = &size_shell_par;
         shell_par = GrahamParallel(ptr_p, size, p_ssp);
-        delete[] shell_par;
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
-    int size = 50;
-    std::vector<std::vector<int>> ps;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_26_points) {
+    int size = 26;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
     int** shell_par;
     if (proc_rank == 0) {
-        ps = GetPoints(size, 600, 350, 330);
+        std::vector<std::vector<int>> ps = GetPoints(size, 600, 350, 330);
 
         std::vector<int*> t_seq2(size);
         for (int i = 0; i < size; i++)
@@ -106,8 +104,8 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_100_points) {
-    int size = 100;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
+    int size = 50;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
@@ -156,8 +154,8 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_100_points) 
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_500_points) {
-    int size = 500;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_80_points) {
+    int size = 80;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
@@ -206,8 +204,8 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_500_points) 
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_800_points) {
-    int size = 800;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_100_points) {
+    int size = 100;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
