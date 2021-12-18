@@ -183,20 +183,20 @@ TEST(DanshinGlebCCSMatrixProduct, MatrixTypes01x1000x1000n01x1000x1000) {
   MPI_Barrier(MPI_COMM_WORLD);
 }
 
-TEST(DanshinGlebCCSMatrixProduct, MatrixTypes001x2000x3000n001x3000x1000) {
+TEST(DanshinGlebCCSMatrixProduct, MatrixTypes00001x2000x3000n00001x3000x1000) {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   CCSMatrix* matrix1 = nullptr;
   CCSMatrix* matrix2 = nullptr;
-  CCSMatrix* answer_sequence;
-  CCSMatrix* answer_parallel;
+  CCSMatrix* answer_sequence = nullptr;
+  CCSMatrix* answer_parallel = nullptr;
 
   double seq_start_time, seq_end_time, par_start_time, par_end_time;
 
   if (rank == 0) {
-    matrix1 = GenerateRandomMatrix(0.01, 2000, 3000);
-    matrix2 = GenerateRandomMatrix(0.01, 3000, 1000);
+    matrix1 = GenerateRandomMatrix(0.0001, 2000, 3000);
+    matrix2 = GenerateRandomMatrix(0.0001, 3000, 1000);
 
     seq_start_time = MPI_Wtime();
     answer_sequence = MatrixProduct(matrix1, matrix2);

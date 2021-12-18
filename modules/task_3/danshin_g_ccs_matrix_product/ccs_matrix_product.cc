@@ -152,13 +152,13 @@ CCSMatrix* MatrixProductParallel(CCSMatrix* matrix1, CCSMatrix* matrix2) {
   MPI_Bcast(&m1_column_count, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast(&m1_length, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-  int* values_send_counts;
-  int* values_send_disps;
-  int* pointers_send_counts;
-  int* column_divide_count;
+  int* values_send_counts = nullptr;
+  int* values_send_disps = nullptr;
+  int* pointers_send_counts = nullptr;
+  int* column_divide_count = nullptr;
   std::vector<int> pointers_sends = {0};
-  int* pointers_send_disps;
-  CRSMatrix* matrix1_to_crs;
+  int* pointers_send_disps = nullptr;
+  CRSMatrix* matrix1_to_crs = nullptr;
   if (world_rank == 0) {
     matrix1_to_crs = new CRSMatrix(*matrix1);
   } else {
@@ -307,6 +307,10 @@ CCSMatrix* MatrixProductParallel(CCSMatrix* matrix1, CCSMatrix* matrix2) {
                 }
             }
         }
+    }
+
+    for (; c < m2_column_count; ++c) {
+      answer_pointers[c + 1] = answer_pointers[c];
     }
 
     delete [] values_send_counts;
