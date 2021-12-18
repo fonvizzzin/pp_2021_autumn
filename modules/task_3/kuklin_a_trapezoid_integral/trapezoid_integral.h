@@ -39,17 +39,20 @@ class ThirdIntegral : public Func {
   double CalculateFunc(std::vector<double> point);
 };
 
-double CalculateTrapezoidIntegral(Func *func, std::vector<double> lower_bound,
-                                  std::vector<double> upper_bound,
+double CalculateTrapezoidIntegral(Func* func,
+                                  const std::vector<double>& lower_bound,
+                                  const std::vector<double>& upper_bound,
                                   std::size_t segments_count,
                                   std::size_t f_point, std::size_t l_point);
 
-double TrapezoidIntegralSequential(Func *func, std::vector<double> lower_bound,
-                                   std::vector<double> upper_bound,
+double TrapezoidIntegralSequential(Func* func,
+                                   const std::vector<double>& lower_bound,
+                                   const std::vector<double>& upper_bound,
                                    std::size_t segments_count);
 
-double TrapezoidIntegralParallel(Func *func, std::vector<double> lower_bound,
-                                 std::vector<double> upper_bound,
+double TrapezoidIntegralParallel(Func* func,
+                                 const std::vector<double>& lower_bound,
+                                 const std::vector<double>& upper_bound,
                                  std::size_t segments_count);
 
 #endif  //  MODULES_TASK_3_KUKLIN_A_TRAPEZOID_INTEGRAL_TRAPEZOID_INTEGRAL_H_

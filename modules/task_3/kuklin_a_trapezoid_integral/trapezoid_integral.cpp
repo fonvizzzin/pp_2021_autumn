@@ -43,8 +43,9 @@ double ThirdIntegral::CalculateFunc(std::vector<double> point) {
   return sin(point[0]) + cos(point[1]) + sin(point[2]);
 }
 
-double CalculateTrapezoidIntegral(Func* func, std::vector<double> lower_bound,
-                                  std::vector<double> upper_bound,
+double CalculateTrapezoidIntegral(Func* func,
+                                  const std::vector<double>& lower_bound,
+                                  const std::vector<double>& upper_bound,
                                   std::size_t segments_count,
                                   std::size_t f_point, std::size_t l_point) {
   std::size_t variables_count = lower_bound.size();
@@ -84,8 +85,9 @@ double CalculateTrapezoidIntegral(Func* func, std::vector<double> lower_bound,
   return res;
 }
 
-double TrapezoidIntegralSequential(Func* func, std::vector<double> lower_bound,
-                                   std::vector<double> upper_bound,
+double TrapezoidIntegralSequential(Func* func,
+                                   const std::vector<double>& lower_bound,
+                                   const std::vector<double>& upper_bound,
                                    std::size_t segments_count) {
   std::size_t points_count = 1, variables_count = lower_bound.size();
   for (std::size_t i = 0; i < variables_count; i++)
@@ -94,8 +96,9 @@ double TrapezoidIntegralSequential(Func* func, std::vector<double> lower_bound,
                                     segments_count, 0, points_count);
 }
 
-double TrapezoidIntegralParallel(Func* func, std::vector<double> lower_bound,
-                                 std::vector<double> upper_bound,
+double TrapezoidIntegralParallel(Func* func,
+                                 const std::vector<double>& lower_bound,
+                                 const std::vector<double>& upper_bound,
                                  std::size_t segments_count) {
   int procSize, procRank;
   MPI_Comm_size(MPI_COMM_WORLD, &procSize);
