@@ -3,6 +3,7 @@
 #define MODULES_TASK_3_KUKLIN_A_TRAPEZOID_INTEGRAL_TRAPEZOID_INTEGRAL_H_
 
 #include <vector>
+#include <cmath>
 
 class Func {
  protected:
