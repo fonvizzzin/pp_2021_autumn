@@ -23,9 +23,6 @@ std::vector<std::vector<int>> getRandMatrix(int m, int n) {
 
 int getLocalMinimum(std::vector<int> vec, int n) {
   int min;
-  if (vec.size() == 0) {
-    min = NULL;
-  }
   min = vec[0];
   if (vec.size() > 1) {
     for (int i = 0; i < n; i++) {
