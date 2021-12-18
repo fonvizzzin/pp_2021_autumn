@@ -28,11 +28,13 @@ std::vector<std::vector<int>> GetPoints(int count_p, int centre_x, int centre_y,
             ps[j][0] = centre_x + static_cast<int>((range(gen)) * cos(i));
             ps[j][1] = centre_y + static_cast<int>((range(gen)) * sin(i));
             j++;
-            if (j == count_p)
+            if (j == count_p) {
                 break;
+            }
         }
-        if (j == count_p)
+        if (j == count_p) {
             break;
+        }
     }
     return ps;
 }
