@@ -3,8 +3,6 @@
 #include <vector>
 #include "./min_matrix_row.h"
 #include <gtest-mpi-listener.hpp>
-
-
 TEST(Parallel_Operations_MPI, getlocalmin_test) {
   int n = 5;
   std::vector<int> vector = {1, 7, 9, 8, 6};
@@ -35,7 +33,7 @@ TEST(Parallel_Operations_MPI, findmin_nonparall) {
 }
 
 TEST(Parallel_Operations_MPI, findmin_parall) {
-  int m = 10, n = 10;
+  int m = 1000, n = 1000;
   std::vector<std::vector<int>> g_matrix(m, std::vector<int>(n));
   g_matrix = getRandMatrix(m, n);
   std::vector<int> res(m);
