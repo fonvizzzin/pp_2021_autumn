@@ -10,8 +10,7 @@
 
 int* p0 = new int[2];
 
-std::vector<std::vector<int>> GetPoints(int count_p, int centre_x, int centre_y, int r)
-{
+std::vector<std::vector<int>> GetPoints(int count_p, int centre_x, int centre_y, int r) {
     std::mt19937 gen(std::random_device().operator()());
     std::uniform_int_distribution<> range(5, r);
     std::vector<std::vector<int>> ps(count_p);
@@ -19,8 +18,7 @@ std::vector<std::vector<int>> GetPoints(int count_p, int centre_x, int centre_y,
     int count_r = count_p / 63 + 1;
     int remains = 63 - count_p % 63;
     int j = 0;
-    for (double i = 0; i < 6.27; i += 0.1)
-    {
+    for (double i = 0; i < 6.27; i += 0.1) {
         for (int k = 0; k < count_r; k++) {
             if ((remains) && (k == 0)) {
                 remains--;
@@ -39,31 +37,27 @@ std::vector<std::vector<int>> GetPoints(int count_p, int centre_x, int centre_y,
     return ps;
 }
 
-int Rotate(int* p, int* b, int* c)
-{
+int Rotate(int* p, int* b, int* c) {
     int res = (b[0] - p[0]) * (c[1] - b[1]) - (b[1] - p[1]) * (c[0] - b[0]);
     if (res == 0)
         return 0;
     return (res > 0) ? 1 : -1;
 }
 
-int Distance(int* p1, int* p2)
-{
+int Distance(int* p1, int* p2) {
     return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);
 }
 
-int Compare(const void* p_1, const void* p_2)
-{
-    int* p1 = *(int**)p_1;
-    int* p2 = *(int**)p_2;
+int Compare(const void* p_1, const void* p_2) {
+    int* p1 = *reinterpret_cast<int**>(const_cast<void*>(p_1));
+    int* p2 = *reinterpret_cast<int**>(const_cast<void*>(p_2));
     int val = Rotate(p0, p1, p2);
     if (val == 0)
         return (Distance(p0, p2) >= Distance(p0, p1)) ? 1 : -1;
     return val;
 }
 
-int* NextToTop(std::stack<int*>& S)
-{
+int* NextToTop(std::stack<int*> S) {
     int* p = S.top();
     S.pop();
     int* res = S.top();
@@ -71,11 +65,9 @@ int* NextToTop(std::stack<int*>& S)
     return res;
 }
 
-int** GrahamSequential(int** points, int size, int& size_shell)
-{
+int** GrahamSequential(int** points, int size, int* size_shell) {
     int x_min = points[0][0], min_p = 0;
-    for (int i = 1; i < size; i++)
-    {
+    for (int i = 1; i < size; i++) {
         if ((points[i][0] < x_min) || (points[i][0] == x_min && points[i][1] < points[min_p][1]))
             x_min = points[i][0], min_p = i;
     }
@@ -92,22 +84,21 @@ int** GrahamSequential(int** points, int size, int& size_shell)
     S.push(points[1]);
     S.push(points[2]);
 
-    for (int i = 3; i < size; i++)
-    {
+    for (int i = 3; i < size; i++) {
         while (Rotate(NextToTop(S), S.top(), points[i]) != -1)
             S.pop();
         S.push(points[i]);
     }
-
-    size_shell = S.size();
-    int** shell = new int* [size_shell];
-    for (int i = 0; i < size_shell; ++i)
+    int stack_size = S.size();
+    *size_shell = stack_size;
+    int** shell = new int* [stack_size];
+    for (int i = 0; i < stack_size; ++i)
         shell[i] = S.top(), S.pop();
 
     return shell;
 }
 
-int** GrahamParallel(int** points, int size, int& size_shell) {
+int** GrahamParallel(int** points, int size, int* size_shell) {
     MPI_Barrier(MPI_COMM_WORLD);
     int proc_count, proc_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
@@ -150,14 +141,14 @@ int** GrahamParallel(int** points, int size, int& size_shell) {
         }
     }
     int shell_local_size = 0;
+    int* p_sls = &shell_local_size;
     int** shell_local_2d = nullptr;
     int* shell_global_1d = nullptr;
     int size_global_shell = 0;
     if (proc_rank < proc) {
-        shell_local_2d = GrahamSequential(points_2, num_elem_block, shell_local_size);
+        shell_local_2d = GrahamSequential(points_2, num_elem_block, p_sls);
 
-        if (proc_rank == 0)
-        {
+        if (proc_rank == 0) {
             size_global_shell = shell_local_size;
             int buf;
             sendcounts[0] = shell_local_size * 2;
@@ -182,11 +173,11 @@ int** GrahamParallel(int** points, int size, int& size_shell) {
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Gatherv(shell_local_1d, shell_local_size * 2, MPI_INT, shell_global_1d, sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(shell_local_1d, shell_local_size * 2, MPI_INT, shell_global_1d,
+        sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD);
 
     int** res = nullptr;
     if (proc_rank == 0) {
-
         int** shell_global_2d = new int* [size_global_shell];
         for (int i = 0; i < size_global_shell; i++) {
             shell_global_2d[i] = new int[2];
@@ -196,7 +187,7 @@ int** GrahamParallel(int** points, int size, int& size_shell) {
         if (proc_count) {
             res = GrahamSequential(shell_global_2d, size_global_shell, size_shell);
         } else {
-            size_shell = size_global_shell;
+            *size_shell = size_global_shell;
             return shell_global_2d;
         }
     }

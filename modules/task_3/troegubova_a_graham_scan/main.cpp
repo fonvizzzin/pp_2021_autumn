@@ -10,7 +10,7 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_10_points) {
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-
+    int** shell_par;
     if (proc_rank == 0) {
         ps = GetPoints(size, 600, 350, 330);
 
@@ -22,15 +22,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_10_points) {
             t_par1[i] = ps[i].data();
 
         int size_shell_par;
-        double time_1 = MPI_Wtime();
-        int** shell_par = GrahamParallel(t_par1.data(), size, size_shell_par);
-        double time_2 = MPI_Wtime();
+        int* p_ssp = &size_shell_par;
+        // double time_1 = MPI_Wtime();
+        shell_par = GrahamParallel(t_par1.data(), size, p_ssp);
+        // double time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamParallel execution: "<< (time_2 - time_1) <<  "\n";
 
-        int size_shell_seq; 
-        time_1 = MPI_Wtime();
-        int** shell_seq = GrahamSequential(t_seq1.data(), size, size_shell_seq);
-        time_2 = MPI_Wtime();
+        int size_shell_seq;
+        int* p_sss = &size_shell_seq;
+        // time_1 = MPI_Wtime();
+        int** shell_seq = GrahamSequential(t_seq1.data(), size, p_sss);
+        // time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamSequential execution " << (time_2 - time_1) <<  "\n";
         int control = 1;
         if (size_shell_par != size_shell_seq) {
@@ -48,10 +50,10 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_10_points) {
         int* ptr = nullptr;
         int** ptr_p = &ptr;
         int size_shell_par;
-        int** shell_par = GrahamParallel(ptr_p, size, size_shell_par);
+        int* p_ssp = &size_shell_par;
+        shell_par = GrahamParallel(ptr_p, size, p_ssp);
         delete[] shell_par;
-    }
-    
+    }   
 }
 
 TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
@@ -59,7 +61,7 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-
+    int** shell_par;
     if (proc_rank == 0) {
         ps = GetPoints(size, 600, 350, 330);
 
@@ -71,15 +73,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
             t_par2[i] = ps[i].data();
 
         int size_shell_par;
-        double time_1 = MPI_Wtime();
-        int** shell_par = GrahamParallel(t_par2.data(), size, size_shell_par);
-        double time_2 = MPI_Wtime();
+        int* p_ssp = &size_shell_par;
+        // double time_1 = MPI_Wtime();
+        shell_par = GrahamParallel(t_par2.data(), size, p_ssp);
+        // double time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamParallel execution: " << (time_2 - time_1) << "\n";
 
         int size_shell_seq;
-        time_1 = MPI_Wtime();
-        int** shell_seq = GrahamSequential(t_seq2.data(), size, size_shell_seq);
-        time_2 = MPI_Wtime();
+        int* p_sss = &size_shell_seq;
+        // time_1 = MPI_Wtime();
+        int** shell_seq = GrahamSequential(t_seq2.data(), size, p_sss);
+        // time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamSequential execution " << (time_2 - time_1) << "\n";
         int control = 1;
         if (size_shell_par != size_shell_seq) {
@@ -97,16 +101,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
         int* ptr = nullptr;
         int** ptr_p = &ptr;
         int size_shell_par;
-        int** shell_par = GrahamParallel(ptr_p, size, size_shell_par);
+        int* p_ssp = &size_shell_par;
+        shell_par = GrahamParallel(ptr_p, size, p_ssp);
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_300_points) {
-    int size = 300;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_100_points) {
+    int size = 100;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-
+    int** shell_par;
     if (proc_rank == 0) {
         ps = GetPoints(size, 600, 350, 330);
 
@@ -118,15 +123,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_300_points) 
             t_par3[i] = ps[i].data();
 
         int size_shell_par;
-        double time_1 = MPI_Wtime();
-        int** shell_par = GrahamParallel(t_par3.data(), size, size_shell_par);
-        double time_2 = MPI_Wtime();
+        int* p_ssp = &size_shell_par;
+        // double time_1 = MPI_Wtime();
+        shell_par = GrahamParallel(t_par3.data(), size, p_ssp);
+        // double time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamParallel execution: " << (time_2 - time_1) << "\n";
 
         int size_shell_seq;
-        time_1 = MPI_Wtime();
-        int** shell_seq = GrahamSequential(t_seq3.data(), size, size_shell_seq);
-        time_2 = MPI_Wtime();
+        int* p_sss = &size_shell_seq;
+        // time_1 = MPI_Wtime();
+        int** shell_seq = GrahamSequential(t_seq3.data(), size, p_sss);
+        // time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamSequential execution " << (time_2 - time_1) << "\n";
         int control = 1;
         if (size_shell_par != size_shell_seq) {
@@ -144,16 +151,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_300_points) 
         int* ptr = nullptr;
         int** ptr_p = &ptr;
         int size_shell_par;
-        int** shell_par = GrahamParallel(ptr_p, size, size_shell_par);
+        int* p_ssp = &size_shell_par;
+        shell_par = GrahamParallel(ptr_p, size, p_ssp);
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_800_points) {
-    int size = 800;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_500_points) {
+    int size = 500;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-
+    int** shell_par;
     if (proc_rank == 0) {
         ps = GetPoints(size, 600, 350, 330);
 
@@ -165,15 +173,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_800_points) 
             t_par4[i] = ps[i].data();
 
         int size_shell_par;
-        double time_1 = MPI_Wtime();
-        int** shell_par = GrahamParallel(t_par4.data(), size, size_shell_par);
-        double time_2 = MPI_Wtime();
+        int* p_ssp = &size_shell_par;
+        // double time_1 = MPI_Wtime();
+        shell_par = GrahamParallel(t_par4.data(), size, p_ssp);
+        // double time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamParallel execution: " << (time_2 - time_1) << "\n";
 
         int size_shell_seq;
-        time_1 = MPI_Wtime();
-        int** shell_seq = GrahamSequential(t_seq4.data(), size, size_shell_seq);
-        time_2 = MPI_Wtime();
+        int* p_sss = &size_shell_seq;
+        // time_1 = MPI_Wtime();
+        int** shell_seq = GrahamSequential(t_seq4.data(), size, p_sss);
+        // time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamSequential execution " << (time_2 - time_1) << "\n";
         int control = 1;
         if (size_shell_par != size_shell_seq) {
@@ -191,16 +201,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_800_points) 
         int* ptr = nullptr;
         int** ptr_p = &ptr;
         int size_shell_par;
-        int** shell_par = GrahamParallel(ptr_p, size, size_shell_par);
+        int* p_ssp = &size_shell_par;
+        shell_par = GrahamParallel(ptr_p, size, p_ssp);
     }
 }
 
-TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_1000_points) {
-    int size = 1000;
+TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_800_points) {
+    int size = 800;
     std::vector<std::vector<int>> ps;
     int proc_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &proc_rank);
-
+    int** shell_par;
     if (proc_rank == 0) {
         ps = GetPoints(size, 600, 350, 330);
 
@@ -212,15 +223,17 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_1000_points)
             t_par5[i] = ps[i].data();
 
         int size_shell_par;
-        double time_1 = MPI_Wtime();
-        int** shell_par = GrahamParallel(t_par5.data(), size, size_shell_par);
-        double time_2 = MPI_Wtime();
+        int* p_ssp = &size_shell_par;
+        // double time_1 = MPI_Wtime();
+        shell_par = GrahamParallel(t_par5.data(), size, p_ssp);
+        // double time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamParallel execution: " << (time_2 - time_1) << "\n";
 
         int size_shell_seq;
-        time_1 = MPI_Wtime();
-        int** shell_seq = GrahamSequential(t_seq5.data(), size, size_shell_seq);
-        time_2 = MPI_Wtime();
+        int* p_sss = &size_shell_seq;
+        // time_1 = MPI_Wtime();
+        int** shell_seq = GrahamSequential(t_seq5.data(), size, p_sss);
+        // time_2 = MPI_Wtime();
         // std::cout << "Time spent on GrahamSequential execution " << (time_2 - time_1) << "\n";
         int control = 1;
         if (size_shell_par != size_shell_seq) {
@@ -238,7 +251,8 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_1000_points)
         int* ptr = nullptr;
         int** ptr_p = &ptr;
         int size_shell_par;
-        int** shell_par = GrahamParallel(ptr_p, size, size_shell_par);
+        int* p_ssp = &size_shell_par;
+        shell_par = GrahamParallel(ptr_p, size, p_ssp);
     }
 }
 
