@@ -53,7 +53,7 @@ TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_10_points) {
         int* p_ssp = &size_shell_par;
         shell_par = GrahamParallel(ptr_p, size, p_ssp);
         delete[] shell_par;
-    }   
+    }
 }
 
 TEST(grahan_scan_test, correct_finding_of_a_convex_hull_on_a_set_of_50_points) {
