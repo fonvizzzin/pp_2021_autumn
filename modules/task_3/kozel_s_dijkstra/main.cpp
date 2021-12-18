@@ -7,7 +7,7 @@ bool test(int size) {
     int flag;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
-    
+
     int* graf = gen_matrix(size, procRank);
     int* par = parallel(graf, size);
 
