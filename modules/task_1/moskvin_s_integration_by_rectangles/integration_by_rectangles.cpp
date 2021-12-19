@@ -5,7 +5,6 @@
 double sequentialIntegration(double a, double b, int n, double(*Func)(double)) {
     const double h = (b - a) / static_cast<double>(n);
     double sum = 0;
-
     for (int i = 0; i < n; i++)
         sum += Func(a + h * (i + 0.5));
     return (sum * h);
