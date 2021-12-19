@@ -9,6 +9,7 @@ double getIntegralTrapezoidalRuleParallel(const std::function<double(double)>& f
     double res_sum = 0.0;
     double sum = 0.0;
     double h = (b - a) / n;
+
     if (n > 0) {
         for (int i = rank; i < n; i += size) {
             sum += (f(a + i * h) + f(a + (i + 1) * h)) * 0.5 * h;
@@ -21,6 +22,7 @@ double getIntegralTrapezoidalRuleParallel(const std::function<double(double)>& f
 double getIntegralTrapezoidalRuleSequential(const std::function<double(double)>& f, double a, double b, int n) {
     double res_sum = 0.0;
     double h = (b - a) / n;
+    
     if (n > 0) {
         for (int i = 0; i < n; i++) {
             res_sum += (f(a + i * h) + f(a + (i + 1) * h)) * 0.5 * h;
