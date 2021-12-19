@@ -79,7 +79,7 @@ int** GrahamSequential(int** points, int size, int* size_shell) {
     points[min_p] = tmp;
     p0 = points[0];
 
-    qsort(points + 1, (size - 1), 8, Compare);
+    qsort(points + 1, size - 1, 8, Compare);
 
     std::stack<int*> S;
     S.push(points[0]);
