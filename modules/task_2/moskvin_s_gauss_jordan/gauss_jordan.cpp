@@ -4,7 +4,7 @@
 #include <numeric>
 #include <iostream>
 #include <cstring>
-#include "gauss_jordan.h"
+#include "../../../modules/task_2/moskvin_s_gauss_jordan/gauss_jordan.h"
 
 int getNumRows(int total, int size, int rank) {
     int size_mtx = total;

@@ -1,8 +1,7 @@
 // Copyright 2021 Moskvin Stanislav
 #include <gtest/gtest.h>
-#include <time.h>
 #include <random>
-#include "gauss_jordan.h"
+#include "../../../modules/task_2/moskvin_s_gauss_jordan/gauss_jordan.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(parallel_mpi, parallel_calculation_solution_matrix_1) {
@@ -14,7 +13,6 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_1) {
     int k = size_matrix + 1;
     double* mtx = new
         double[sizeof(double) * num_rows_rank * (k)];
-    double time_start, time_end;
     std::mt19937 gen;
     for (int i = 0; i < num_rows_rank; i++) {
         rows[i] = rank + size * i;
@@ -23,9 +21,12 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_1) {
             mtx[i * (k) + j] = gen() % 100 + 1;
     }
 
-    time_start = MPI_Wtime();
     double* res = parallelGaussJordan(size_matrix, num_rows_rank, rows, mtx);
-    time_end = MPI_Wtime();
+    if (rank == 0) {
+        for (int j = 0; j < size_matrix; j++)
+            std::cout << res[j] << " ";
+        std::cout << "\n";
+    }
 }
 
 TEST(parallel_mpi, parallel_calculation_solution_matrix_2) {
@@ -37,7 +38,6 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_2) {
     int k = size_matrix + 1;
     double* mtx = new
         double[sizeof(double) * num_rows_rank * (k)];
-    double time_start, time_end;
     std::mt19937 gen;
     for (int i = 0; i < num_rows_rank; i++) {
         rows[i] = rank + size * i;
@@ -45,9 +45,12 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_2) {
         for (int j = 0; j <= size_matrix; j++)
             mtx[i * (k) + j] = gen() % 100 + 1;
     }
-    time_start = MPI_Wtime();
     double* res = parallelGaussJordan(size_matrix, num_rows_rank, rows, mtx);
-    time_end = MPI_Wtime();
+    if (rank == 0) {
+        for (int j = 0; j < size_matrix; j++)
+            std::cout << res[j] << " ";
+        std::cout << "\n";
+    }
 }
 
 TEST(parallel_mpi, parallel_calculation_solution_matrix_3) {
@@ -59,7 +62,6 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_3) {
     int k = size_matrix + 1;
     double* mtx = new
         double[sizeof(double) * num_rows_rank * (k)];
-    double time_start, time_end;
     std::mt19937 gen;
     for (int i = 0; i < num_rows_rank; i++) {
         rows[i] = rank + size * i;
@@ -67,9 +69,12 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_3) {
         for (int j = 0; j <= size_matrix; j++)
             mtx[i * (k) + j] = gen() % 100 + 1;
     }
-    time_start = MPI_Wtime();
     double* res = parallelGaussJordan(size_matrix, num_rows_rank, rows, mtx);
-    time_end = MPI_Wtime();
+    if (rank == 0) {
+        for (int j = 0; j < size_matrix; j++)
+            std::cout << res[j] << " ";
+        std::cout << "\n";
+    }
 }
 
 TEST(parallel_mpi, parallel_calculation_solution_matrix_4) {
@@ -81,7 +86,6 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_4) {
     int k = size_matrix + 1;
     double* mtx = new
         double[sizeof(double) * num_rows_rank * (k)];
-    double time_start, time_end;
     std::mt19937 gen;
     for (int i = 0; i < num_rows_rank; i++) {
         rows[i] = rank + size * i;
@@ -89,9 +93,12 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_4) {
         for (int j = 0; j <= size_matrix; j++)
             mtx[i * (k) + j] = gen() % 100 + 1;
     }
-    time_start = MPI_Wtime();
     double* res = parallelGaussJordan(size_matrix, num_rows_rank, rows, mtx);
-    time_end = MPI_Wtime();
+    if (rank == 0) {
+        for (int j = 0; j < size_matrix; j++)
+            std::cout << res[j] << " ";
+        std::cout << "\n";
+    }
 }
 
 TEST(parallel_mpi, parallel_calculation_solution_matrix_5) {
@@ -103,7 +110,6 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_5) {
     int k = size_matrix + 1;
     double* mtx = new
         double[sizeof(double) * num_rows_rank * (k)];
-    double time_start, time_end;
     std::mt19937 gen;
     for (int i = 0; i < num_rows_rank; i++) {
         rows[i] = rank + size * i;
@@ -111,9 +117,12 @@ TEST(parallel_mpi, parallel_calculation_solution_matrix_5) {
         for (int j = 0; j <= size_matrix; j++)
             mtx[i * (k) + j] = gen() % 100 + 1;
     }
-    time_start = MPI_Wtime();
     double* res = parallelGaussJordan(size_matrix, num_rows_rank, rows, mtx);
-    time_end = MPI_Wtime();
+    if (rank == 0) {
+        for (int j = 0; j < size_matrix; j++)
+            std::cout << res[j] << " ";
+        std::cout << "\n";
+    }
 }
 
 int main(int argc, char** argv) {
