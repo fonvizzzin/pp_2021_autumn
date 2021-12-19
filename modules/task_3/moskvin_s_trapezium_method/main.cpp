@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <cmath>
-#include "trapezium_method.h"
+#include "../../../modules/task_3/moskvin_s_trapezium_method/trapezium_method.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_xsiny) {
