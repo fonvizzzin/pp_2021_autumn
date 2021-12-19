@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <cmath>
-#include "../../../modules/task_1/moskvin_s_trapezium_method/trapezium_method.h"
+#include "trapezium_method.h"
 #include <gtest-mpi-listener.hpp>
 
 TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_xsiny) {
@@ -28,6 +28,7 @@ TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_xsiny) {
         seq_res = getMethodSequential(0, 5, 0, 1, 100, Func);
         time_end = MPI_Wtime();
         seq_time = time_end - time_start;
+        std::cout << seq_time / par_time << "\n";
         ASSERT_NEAR(res, seq_res, error);
     }
 }
@@ -55,6 +56,7 @@ TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_xy) {
         seq_res = getMethodSequential(0, 1, 0, 5, 1000, Func);
         time_end = MPI_Wtime();
         seq_time = time_end - time_start;
+        std::cout << seq_time / par_time << "\n";
         ASSERT_NEAR(res, seq_res, error);
     }
 }
@@ -82,6 +84,7 @@ TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_pow) {
         seq_res = getMethodSequential(0, 0.5, 0, 0.5, 1000, Func);
         time_end = MPI_Wtime();
         seq_time = time_end - time_start;
+        std::cout << seq_time / par_time << "\n";
         ASSERT_NEAR(res, seq_res, error);
     }
 }
@@ -109,6 +112,7 @@ TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_0) {
         seq_res = getMethodSequential(0, 50, 0, 50, 10000, Func);
         time_end = MPI_Wtime();
         seq_time = time_end - time_start;
+        std::cout << seq_time / par_time << "\n";
         ASSERT_NEAR(res, seq_res, error);
     }
 }
@@ -136,6 +140,7 @@ TEST(parallel_operations_mpi, integr_trapezoid_par_seq_function_1) {
         seq_res = getMethodSequential(0, 5, 0, 5, 1000, Func);
         time_end = MPI_Wtime();
         seq_time = time_end - time_start;
+        std::cout << seq_time / par_time << "\n";
         ASSERT_NEAR(res, seq_res, error);
     }
 }
