@@ -54,7 +54,7 @@ void getParallelOperations(std::vector<std::vector<int>> g_matrix, int m, int n,
   if (size == 1) {
     findMinNonParallel(g_matrix, m, n, res);
   }
-  if (size > m) {
+  if (size >= m) {
     int size_n;
     if (rank == 0) {
       int rank, size;
