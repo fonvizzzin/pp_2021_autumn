@@ -33,7 +33,7 @@ TEST(Parallel_Operations_MPI, findmin_nonparall) {
 }
 
 TEST(Parallel_Operations_MPI, findmin_parall) {
-  int m = 20, n = 20;
+  int m = 10, n = 10;
   std::vector<std::vector<int>> g_matrix(m, std::vector<int>(n));
   g_matrix = getRandMatrix(m, n);
   std::vector<int> res(m);
