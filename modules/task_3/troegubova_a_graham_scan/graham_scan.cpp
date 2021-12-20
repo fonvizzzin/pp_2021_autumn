@@ -102,7 +102,7 @@ std::vector<int> GrahamSequential(const std::vector<int>& p, int count_points, i
     }
     return shell;
 }
-// points = {x0, y0, x1, y1, ... xn, yn}
+// points = { x0, y0, x1, y1, ... xn, yn }
 std::vector<int> GrahamParallel(const std::vector<int>& points, int count_points, int* size_shell) {
     int proc_count, proc_rank;
     MPI_Comm_size(MPI_COMM_WORLD, &proc_count);
