@@ -33,9 +33,9 @@ bool is_topology_grid_torus(const MPI_Comm grid_torus_comm, const int ndims, con
         if (ndims_real != ndims) {
             res = false;
         } else {
-            int *dims_real = new int [ndims_real];
-            int *periods_real = new int [ndims_real];
-            int *coords_real = new int [ndims_real];
+            int *dims_real = new int[ndims_real];
+            int *periods_real = new int[ndims_real];
+            int *coords_real = new int[ndims_real];
 
             MPI_Cart_get(grid_torus_comm, ndims_real, dims_real, periods_real, coords_real);
 

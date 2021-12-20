@@ -74,7 +74,7 @@ TEST(TEST_TOPOLOGY, correct_paired_sending) {
     int message = 5;
     int message_real = 0;
 
-    int received_node_coords[2] = { ProcNum / 2, ProcNum / 3}; 
+    int received_node_coords[2] = { ProcNum / 2, ProcNum / 3};
     if (ProcRank == 0) {
         message_real = 5;
         MPI_Send(&message_real, 1, MPI_INT, received_node_coords[0], 1, grid_torus_comm);
@@ -104,7 +104,7 @@ TEST(TEST_TOPOLOGY, correct_collective_sending) {
     int message = 0;
     if (ProcRank == 0) {
         message = 10;
-	}
+    }
     MPI_Bcast(&message, 1, MPI_INT, 0, grid_torus_comm);
     int new_message = 2 * message;
     int res = 0;
@@ -112,7 +112,7 @@ TEST(TEST_TOPOLOGY, correct_collective_sending) {
     if (ProcRank == 0) {
         int correct_res = 2 * message * ProcNum;
         ASSERT_EQ(res, correct_res);
-	}
+    }
 }
 
 int main(int argc, char** argv) {
