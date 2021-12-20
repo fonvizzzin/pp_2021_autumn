@@ -68,8 +68,7 @@ std::vector<int> NextToTop(std::stack<std::vector<int>> S) {
 std::vector<int> GrahamSequential(const std::vector<int>& p, int count_points, int* size_shell) {
     std::vector<int> points = p;
     int x_min = points[0], min_p = 0;
-    for (int i = 1; i < count_points; i++)
-    {
+    for (int i = 1; i < count_points; i++) {
         if ((points[i * 2] < x_min) || (points[i * 2] == x_min && points[i * 2 + 1] < points[min_p + 1]))
             x_min = points[i * 2], min_p = i * 2;
     }
