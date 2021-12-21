@@ -7,21 +7,17 @@
 TEST(Bubble_sort_odd_even_algorithm_tets, sequential_sort_even_vector_size) {
     std::vector<int> vec{ 7,5,3,0,1,4,2,6 };
     std::vector<int> sorted_vec{ 0,1,2,3,4,5,6,7 };
-
     vec = BubbleSortSequential(vec);
 
     ASSERT_EQ(vec, sorted_vec);
-
 }
 
 TEST(Bubble_sort_odd_even_algorithm_tets, sequential_sort_odd_vector_size) {
     std::vector<int> vec{ 7,5,3,0,1,4,2 };
     std::vector<int> sorted_vec{ 0,1,2,3,4,5,7 };
-
     vec = BubbleSortSequential(vec);
 
     ASSERT_EQ(vec, sorted_vec);
-
 }
 
 TEST(Bubble_sort_odd_even_algorithm_tets, vector_size_100) {
@@ -65,7 +61,7 @@ TEST(Bubble_sort_odd_even_algorithm_tets, vector_size_1000) {
 TEST(Bubble_sort_odd_even_algorithm_tets, vector_size_10000) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    const int size_vector = 10000;
+    const int size_vector = 5000;
     std::vector<int> parallel_vec, sequential_vec, tmp_vec;
 
     if (ProcRank == 0) {
