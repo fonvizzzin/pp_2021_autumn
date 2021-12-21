@@ -29,16 +29,22 @@ TEST(Matrix_CCS, Error_size_2) {
 TEST(Matrix_CCS, Matrix_1x1) {
   int ProcRank;
   matrix_CCS A, B;
+  std::vector<double> parallel_mult;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
-    B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
     A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    parallel_mult = parallel_multiplication(A, B);
+  } else {
+    A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    parallel_mult = parallel_multiplication(A, B);
   }
-  std::vector<double> parallel_mult;
-  parallel_mult = parallel_multiplication(B, A);
+
+  // parallel_mult = parallel_multiplication(A, B);
 
   if (ProcRank == 0) {
-    std::vector<double> seq_mult = multiplication(B, A);
+    std::vector<double> seq_mult = multiplication(A, B);
     ASSERT_EQ(parallel_mult, seq_mult);
   }
 }
@@ -46,13 +52,17 @@ TEST(Matrix_CCS, Matrix_1x1) {
 TEST(Matrix_CCS, Matrix_50x50) {
   int ProcRank;
   matrix_CCS A, B;
+  std::vector<double> parallel_mult;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
     A = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
     B = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
+    parallel_mult = parallel_multiplication(A, B);
+  } else {
+    A = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
+    B = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
+    parallel_mult = parallel_multiplication(A, B);
   }
-
-  std::vector<double> parallel_mult = parallel_multiplication(A, B);
 
   if (ProcRank == 0) {
     std::vector<double> seq_mult = multiplication(A, B);
@@ -63,13 +73,17 @@ TEST(Matrix_CCS, Matrix_50x50) {
 TEST(Matrix_CCS, Col_eq_row) {
   int ProcRank;
   matrix_CCS A, B;
+  std::vector<double> parallel_mult;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
     A = build_data_of_matrix_CCS(random_matrix(50, 2), 50, 2);
     B = build_data_of_matrix_CCS(random_matrix(2, 32), 2, 32);
+    parallel_mult = parallel_multiplication(A, B);
+  } else {
+    A = build_data_of_matrix_CCS(random_matrix(50, 2), 50, 2);
+    B = build_data_of_matrix_CCS(random_matrix(2, 32), 2, 32);
+    parallel_mult = parallel_multiplication(A, B);
   }
-
-  std::vector<double> parallel_mult = parallel_multiplication(A, B);
 
   if (ProcRank == 0) {
     std::vector<double> seq_mult = multiplication(A, B);
