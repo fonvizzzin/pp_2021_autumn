@@ -38,7 +38,7 @@ TEST(Parallel_MPI, Test_funct_3) {
     int n = 100000;
     resPar = integralParallel(a, b, n, f3);
     if (ProcRank == 0) {
-        resSeq = integralMonteCarlo(a, b, n, f3); 
+        resSeq = integralMonteCarlo(a, b, n, f3);
         EXPECT_NEAR(resSeq, resPar, 0.5);
     }
 }
@@ -72,7 +72,6 @@ TEST(Parallel_MPI, Test_funct_5) {
 
 
 int main(int argc, char** argv) {
-
     ::testing::InitGoogleTest(&argc, argv);
     MPI_Init(&argc, &argv);
 
