@@ -59,8 +59,8 @@ TEST(Matrix_CCS, Matrix_50x50) {
     B = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
     parallel_mult = parallel_multiplication(A, B);
   } else {
-    A = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
-    B = build_data_of_matrix_CCS(random_matrix(50, 50), 50, 50);
+    A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
     parallel_mult = parallel_multiplication(A, B);
   }
 
@@ -80,8 +80,8 @@ TEST(Matrix_CCS, Col_eq_row) {
     B = build_data_of_matrix_CCS(random_matrix(2, 32), 2, 32);
     parallel_mult = parallel_multiplication(A, B);
   } else {
-    A = build_data_of_matrix_CCS(random_matrix(50, 2), 50, 2);
-    B = build_data_of_matrix_CCS(random_matrix(2, 32), 2, 32);
+    A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
     parallel_mult = parallel_multiplication(A, B);
   }
 
