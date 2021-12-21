@@ -1,9 +1,8 @@
-// Copyright 2018 Nesterov Alexander
+// Copyright 2021 Zotov Maksim
 #include <mpi.h>
 #include <iostream>
-#include <string>
 #include <random>
-#include <algorithm>
+#include <cmath>
 #include "../../../modules/task_1/zotov_m_integration_Monte_Carlo_method/integration_Monte_Carlo_method.h"
 
 
@@ -25,46 +24,43 @@ double f5(double x) {
     return pow(x, 2) / 3 + 1;
 }
 
-double integralMonteCarlo(double a, double b, double h, int n, double(*f)(double))
+double integralMonteCarlo(double a, double b, int n, double(*f)(double))
 {
-    srand(time(NULL));
-    int inCount = 0;
+    std::mt19937 generate;
+    generate.seed(time(NULL));
+    std::uniform_real_distribution<> uid(0, RAND_MAX);
     double res;
     double x;
-    double y;
+    double y = 0.0;
 
     for (size_t i = 0; i < n; i++) {
-        x = rand() / static_cast<double>(RAND_MAX) * (b - a) + a;
-        y = rand() / static_cast<double>(RAND_MAX) * h;
-        if (y < f(x)) {
-            inCount++;
-        }
+        x = (uid(generate)/RAND_MAX) * (static_cast<double>(b - a) + a);
+        y += f(x);
     }
-    res = (b - a) * h * static_cast<double>(inCount) / n;
+    res = (static_cast<double>(b - a) + a) * y / n;
     return res;
 }
 
-double integralParallel(double a, double b, double h, int n, double(*f)(double))
+double integralParallel(double a, double b, int n, double(*f)(double))
 {
-    srand(time(NULL));
+    std::mt19937 generate;
+    generate.seed(time(NULL));
+    std::uniform_real_distribution<> uid(0, RAND_MAX);
     int ProcRank, ProcNum;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-    int inCount = 0, count = 0;
-    double res;
+    double myRes = 0.0, res = 0.0;
     double x;
-    double y;
+    double y = 0.0;
 
     for (size_t i = 0; i < n; i += ProcNum) {
-        x = rand() / static_cast<double>(RAND_MAX) * (b - a) + a;
-        y = rand() / static_cast<double>(RAND_MAX) * h;
-        if (y < f(x)) {
-            inCount++;
-        }
-
+        x = (uid(generate) / RAND_MAX) * (static_cast<double>(b - a) + a);
+        y += f(x);
     }
-    MPI_Reduce(&inCount, &count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
- 
-    return res = (b - a) * h * static_cast<double>(count) / n;
+    myRes = (static_cast<double>(b - a) + a) * y / n;
+
+    MPI_Reduce(&myRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    
+    return res;
 
 }
