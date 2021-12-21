@@ -16,8 +16,8 @@ struct matrix_CCS {
   std::vector<int> Rows;
   std::vector<int> ColumnIndexes;
 
-  friend std::vector<double> multiplication(const matrix_CCS A,
-                                            const matrix_CCS B);
+  friend std::vector<double> multiplication(const matrix_CCS &A,
+                                            const matrix_CCS &B);
 };
 
 std::vector<double> random_matrix(int rows, int cols);
