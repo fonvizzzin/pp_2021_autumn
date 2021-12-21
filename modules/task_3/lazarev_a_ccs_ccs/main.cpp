@@ -34,8 +34,8 @@ TEST(Matrix_CCS, Matrix_1x1) {
     A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
     B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
   }
-
-  std::vector<double> parallel_mult = parallel_multiplication(A, B);
+  std::vector<double> parallel_mult;
+  parallel_mult = parallel_multiplication(A, B);
 
   if (ProcRank == 0) {
     std::vector<double> seq_mult = multiplication(A, B);

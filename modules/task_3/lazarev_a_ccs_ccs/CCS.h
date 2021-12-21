@@ -5,11 +5,11 @@
 
 #include <mpi.h>
 
+#include <algorithm>
 #include <ctime>
 #include <iostream>
 #include <random>
 #include <vector>
-#include <algorithm>
 
 struct matrix_CCS {
   int rows, cols, non_zero;
