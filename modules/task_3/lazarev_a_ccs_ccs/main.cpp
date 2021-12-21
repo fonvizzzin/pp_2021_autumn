@@ -13,8 +13,7 @@ TEST(Matrix_CCS, Error_size) {
   if (ProcRank == 0) {
     A = build_data_of_matrix_CCS(random_matrix(5, 5), 5, 5);
     B = build_data_of_matrix_CCS(random_matrix(4, 5), 4, 5);
-    std::vector<double> seq_mult = multiplication(A, B);
-    ASSERT_NO_THROW(false);
+    ASSERT_ANY_THROW(multiplication(A, B));
   }
 }
 
@@ -23,9 +22,7 @@ TEST(Matrix_CCS, Error_size_2) {
   matrix_CCS A, B;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
-    A = build_data_of_matrix_CCS(random_matrix(0, 0), 0, 0);
-    B = build_data_of_matrix_CCS(random_matrix(0, 0), 0, 0);
-    ASSERT_NO_THROW(false);
+    ASSERT_ANY_THROW(build_data_of_matrix_CCS(random_matrix(0, 0), 0, 0));
   }
 }
 
