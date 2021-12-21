@@ -30,11 +30,11 @@ TEST(TEST_TOPOLOGY, grid_torus_has_correct_size) {
 
     MPI_Comm grid_torus_comm = creating_topology_grid_torus(dims[0], dims[1]);
 
-    int *dims_real = new int[2];
-    int *periods_real = new int[2];
-    int *coords_real = new int[2];
+    std::vector<int>dims_real(2);
+    std::vector<int>periods_real(2);
+    std::vector<int>coords_real(2);
 
-    MPI_Cart_get(grid_torus_comm, 2, dims_real, periods_real, coords_real);
+    MPI_Cart_get(grid_torus_comm, 2, dims_real.data(), periods_real.data(), coords_real.data());
 
     if (ProcRank == 0) {
         ASSERT_EQ((dims_real[0] == dims[0] && dims_real[1] == dims[1]), 1);
@@ -53,9 +53,9 @@ TEST(TEST_TOPOLOGY, grid_torus_has_correct_coords) {
 
     int coords[2] = { ProcRank / dims[1], ProcRank % dims[1]};
 
-    int* coords_real = new int[2];
+    std::vector<int>coords_real(2);
 
-    MPI_Cart_coords(grid_torus_comm, ProcRank, 2, coords_real);
+    MPI_Cart_coords(grid_torus_comm, ProcRank, 2, coords_real.data());
 
     ASSERT_EQ((coords_real[0] == coords[0] && coords_real[1] == coords[1]), 1);
 }
