@@ -31,14 +31,14 @@ TEST(Matrix_CCS, Matrix_1x1) {
   matrix_CCS A, B;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
   if (ProcRank == 0) {
-    A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
     B = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
+    A = build_data_of_matrix_CCS(random_matrix(1, 1), 1, 1);
   }
   std::vector<double> parallel_mult;
-  parallel_mult = parallel_multiplication(A, B);
+  parallel_mult = parallel_multiplication(B, A);
 
   if (ProcRank == 0) {
-    std::vector<double> seq_mult = multiplication(A, B);
+    std::vector<double> seq_mult = multiplication(B, A);
     ASSERT_EQ(parallel_mult, seq_mult);
   }
 }
