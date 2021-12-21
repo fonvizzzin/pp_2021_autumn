@@ -117,7 +117,7 @@ TEST(Vertical_Gauss_MPI, Test_width_priority_2) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   int* image = nullptr;
-  const int width = 11230, height = 512;
+  const int width = 1230, height = 512;
 
   if (rank == 0) {
     image = getRandomImage(width, height);

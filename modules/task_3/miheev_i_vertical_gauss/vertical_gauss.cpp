@@ -39,7 +39,7 @@ float* getKernel() {
       kernel[idx] = std::exp(-(x * x + y * y) / (sigma * sigma));
       norm += kernel[idx];
     }
-  for (std::size_t i = 0; i < len; i++) {
+  for (int i = 0; i < len; i++) {
     kernel[i] /= norm;
   }
 
