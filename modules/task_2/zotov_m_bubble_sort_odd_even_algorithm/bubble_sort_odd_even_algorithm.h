@@ -15,4 +15,3 @@ void mergAndSort(std::vector<int>& firstArr, std::vector<int>& secondArr);
 
 
 #endif  // MODULES_TASK_2_ZOTOV_M_BUBBLE_SORT_ODD_EVEN_ALGORITHM_BUBBLE_SORT_ODD_EVEN_ALGORITHM_H_
-
