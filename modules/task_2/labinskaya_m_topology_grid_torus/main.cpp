@@ -84,7 +84,7 @@ TEST(TEST_TOPOLOGY, correct_paired_sending) {
             if (received_node_coords[0] != received_node_coords[1])
                 MPI_Send(&message_real, 1, MPI_INT, received_node_coords[1], 1, grid_torus_comm);
         } else {
-            if ((ProcRank == received_node_coords[0])) {
+            if ((ProcRank == received_node_coords[0]) || (ProcRank == received_node_coords[1])) {
                 MPI_Status status;
                 MPI_Recv(&message_real, 1, MPI_INT, 0, 1, grid_torus_comm, &status);
                 ASSERT_EQ(message_real, message);
