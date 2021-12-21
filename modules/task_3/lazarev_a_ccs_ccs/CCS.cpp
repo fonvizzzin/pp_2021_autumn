@@ -69,7 +69,8 @@ std::vector<double> multiplication(const matrix_CCS& A, const matrix_CCS& B) {
   return matrix;
 }
 
-std::vector<double> parallel_multiplication(const matrix_CCS &A, const matrix_CCS &B) {
+std::vector<double> parallel_multiplication(const matrix_CCS& A,
+                                            const matrix_CCS& B) {
   int ProcRank, ProcNum;
   matrix_CCS cop_A = A;
   matrix_CCS cop_B = B;
@@ -122,8 +123,7 @@ std::vector<double> parallel_multiplication(const matrix_CCS &A, const matrix_CC
   for (int index = bounds[ProcRank]; index < bounds[ProcRank + 1]; index++) {
     for (int ind = 0; ind < cop_B.cols; ind++) {
       for (int i = cop_A.ColumnIndexes[index];
-           i < cop_A.ColumnIndexes[index + 1];
-           i++) {
+           i < cop_A.ColumnIndexes[index + 1]; i++) {
         for (int j = cop_B.ColumnIndexes[ind]; j < cop_B.ColumnIndexes[ind + 1];
              j++) {
           if (cop_B.Rows[j] == index) {
