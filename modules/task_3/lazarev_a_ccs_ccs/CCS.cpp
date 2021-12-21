@@ -45,7 +45,7 @@ matrix_CCS build_data_of_matrix_CCS(const std::vector<double>& _matrix,
   return matrix;
 }
 
-std::vector<double> multiplication(const matrix_CCS &A, const matrix_CCS &B) {
+std::vector<double> multiplication(const matrix_CCS& A, const matrix_CCS& B) {
   if (A.cols != B.rows) {
     MPI_ERRORS_RETURN;
   }
