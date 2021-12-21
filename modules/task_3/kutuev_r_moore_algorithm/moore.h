@@ -3,6 +3,7 @@
 #define MODULES_TASK_3_KUTUEV_R_MOORS_MOORS_H_
 
 #include <mpi.h>
+
 #include <random>
 const int INF = 1e9;
 
