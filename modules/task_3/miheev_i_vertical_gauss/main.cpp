@@ -139,6 +139,7 @@ TEST(Vertical_Gauss_MPI, Test_width_priority_2) {
   }
 }
 
+// Main
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);

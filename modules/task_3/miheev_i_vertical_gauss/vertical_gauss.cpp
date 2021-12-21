@@ -60,6 +60,7 @@ float calcNewPixelColor(const int* image, int x, int y, int width, int height,
   return clamp(returnC, 255, 0);
 }
 
+
 int* getSequentialGauss(const int* image, int width, int height) {
   int* new_image = new int[(width - 2) * (height - 2)];
 
