@@ -41,6 +41,7 @@ TEST(Parallel_Operations_MPI, TEST_BASIC_MARKING_IMAGE_SIZE_5x5_TRUE) {
         0, 0, 0, 0, 1,
         0, 1, 0, 0, 1
     };
+
     result = {
         0, 1, 0, 0, 1,
         0, 1, 1, 1, 1,
