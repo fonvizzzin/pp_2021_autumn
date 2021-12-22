@@ -5,7 +5,7 @@
 #include <gtest-mpi-listener.hpp>
 
 TEST(Bubble_sort_odd_even_algorithm_tets, sequential_sort_even_vector_size) {
-    std::vector<int> vec{ 7 ,5, 3, 0, 1, 4, 2, 6 };
+    std::vector<int> vec{ 7, 5, 3, 0, 1, 4, 2, 6 };
     std::vector<int> sorted_vec{ 0, 1, 2, 3, 4, 5, 6, 7 };
     vec = BubbleSortSequential(vec);
 

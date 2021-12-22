@@ -43,16 +43,16 @@ std::vector<int> getRandomVector(int size) {
     return tmp;
 }
 
-void mergAndSort( std::vector<int>& const firstArr,std::vector<int>& const secondArr) {
+void mergAndSort(std::vector<int>* const firstArr, std::vector<int>* const secondArr) {
     std::vector<int> tmp;
-    tmp.insert(tmp.end(), firstArr.begin(), firstArr.end());
-    tmp.insert(tmp.end(), secondArr.begin(), secondArr.end());
+    tmp.insert(tmp.end(), (*firstArr).begin(), (*firstArr).end());
+    tmp.insert(tmp.end(), (*secondArr).begin(), (*secondArr).end());
     sort(tmp.begin(), tmp.end());
     for (int i = 0; i < static_cast<int>(tmp.size()); i++) {
-        if (i < static_cast<int>(firstArr.size())) {
-            firstArr[i] = tmp[i];
+        if (i < static_cast<int>((*firstArr).size())) {
+            (*firstArr)[i] = tmp[i];
         } else {
-            secondArr[i - firstArr.size()] = tmp[i];
+            (*secondArr)[i - (*firstArr).size()] = tmp[i];
         }
     }
 }
@@ -110,7 +110,7 @@ std::vector<int> BubbleSortParallel(std::vector<int> pData) {
             if ((ProcRank % 2 == 1 && ProcRank < ProcNum - 1)) {
                 MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
                     ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-                mergAndSort(my_data, right_neighbor_data);
+                mergAndSort(&my_data, &right_neighbor_data);
                 MPI_Send(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT, ProcRank + 1, 0, MPI_COMM_WORLD);
             } else if (ProcRank > 0 && ProcRank % 2 == 0) {
                 MPI_Send(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1, 0, MPI_COMM_WORLD);
@@ -121,7 +121,7 @@ std::vector<int> BubbleSortParallel(std::vector<int> pData) {
             if (ProcRank % 2 == 0 && ProcRank < ProcNum - 1) {
                 MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
                     ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
-                mergAndSort(my_data, right_neighbor_data);
+                mergAndSort(&my_data, &right_neighbor_data);
                 MPI_Send(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
                     ProcRank + 1, 0, MPI_COMM_WORLD);
             } else if (ProcRank > 0 && ProcRank % 2 == 1) {
