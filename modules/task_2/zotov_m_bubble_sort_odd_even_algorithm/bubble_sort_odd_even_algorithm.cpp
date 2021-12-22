@@ -9,11 +9,11 @@
 
 
 std::vector<int> BubbleSortSequential(std::vector<int> pData) {
-    size_t size = pData.size();
+    int size = pData.size();
     int upper_bound;
     if (size % 2 == 0) {
         upper_bound = size / 2 - 1;
-    }else {
+    } else {
         upper_bound = size / 2;
     }
     for (int i = 0; i < size; i++) {
@@ -22,7 +22,7 @@ std::vector<int> BubbleSortSequential(std::vector<int> pData) {
                 if (pData[2 * j] > pData[2 * j + 1])
                     std::swap(pData[2 * j], pData[2 * j + 1]);
             }
-        }else {
+        } else {
             for (int j = 0; j < upper_bound; j++) {
                 if (pData[2 * j + 1] > pData[2 * j + 2])
                     std::swap(pData[2 * j + 1], pData[2 * j + 2]);
@@ -38,20 +38,20 @@ std::vector<int> getRandomVector(int size) {
     std::uniform_real_distribution<> uid(0, RAND_MAX);
     std::vector<int> tmp;
     for (int i = 0; i < size; i++) {
-        tmp.push_back(rand());
+        tmp.push_back(uid(generate));
     }
     return tmp;
 }
 
-void mergAndSort(std::vector<int>& firstArr, std::vector<int>& secondArr) {
+void mergAndSort( std::vector<int>& const firstArr,std::vector<int>& const secondArr) {
     std::vector<int> tmp;
     tmp.insert(tmp.end(), firstArr.begin(), firstArr.end());
     tmp.insert(tmp.end(), secondArr.begin(), secondArr.end());
     sort(tmp.begin(), tmp.end());
-    for (int i = 0; i < tmp.size(); i++) {
-        if (i < firstArr.size()) {
+    for (int i = 0; i < static_cast<int>(tmp.size()); i++) {
+        if (i < static_cast<int>(firstArr.size())) {
             firstArr[i] = tmp[i];
-        }else {
+        } else {
             secondArr[i - firstArr.size()] = tmp[i];
         }
     }
@@ -60,7 +60,7 @@ void mergAndSort(std::vector<int>& firstArr, std::vector<int>& secondArr) {
 
 std::vector<int> BubbleSortParallel(std::vector<int> pData) {
     int ProcRank, ProcNum;
-    size_t data_size = 0, my_size;
+    int data_size = 0, my_size;
     int remain, sum;
     std::vector<int> my_data, right_neighbor_data;
 
@@ -100,32 +100,39 @@ std::vector<int> BubbleSortParallel(std::vector<int> pData) {
         right_neighbor_data.resize(sendCount[ProcRank + 1]);
     }
 
-    MPI_Scatterv(pData.data(), sendCount.data(), displ.data(), MPI_INT, my_data.data(), sendCount[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(pData.data(), sendCount.data(), displ.data(), MPI_INT, my_data.data(),
+        sendCount[ProcRank], MPI_INT, 0, MPI_COMM_WORLD);
 
     my_data = BubbleSortSequential(my_data);
 
     for (int i = 0; i < ProcNum; i++) {
         if (i % 2 == 1) {
             if ((ProcRank % 2 == 1 && ProcRank < ProcNum - 1)) {
-                MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT, ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+                MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
+                    ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
                 mergAndSort(my_data, right_neighbor_data);
                 MPI_Send(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT, ProcRank + 1, 0, MPI_COMM_WORLD);
-            }else if (ProcRank > 0 && ProcRank % 2 == 0) {
+            } else if (ProcRank > 0 && ProcRank % 2 == 0) {
                 MPI_Send(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1, 0, MPI_COMM_WORLD);
-                MPI_Recv(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+                MPI_Recv(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1,
+                    0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
             }
-        }else if (i % 2 == 0) {
+        } else if (i % 2 == 0) {
             if (ProcRank % 2 == 0 && ProcRank < ProcNum - 1) {
-                MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT, ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+                MPI_Recv(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
+                    ProcRank + 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
                 mergAndSort(my_data, right_neighbor_data);
-                MPI_Send(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT, ProcRank + 1, 0, MPI_COMM_WORLD);
-            }else if (ProcRank > 0 && ProcRank % 2 == 1) {
+                MPI_Send(right_neighbor_data.data(), sendCount[ProcRank + 1], MPI_INT,
+                    ProcRank + 1, 0, MPI_COMM_WORLD);
+            } else if (ProcRank > 0 && ProcRank % 2 == 1) {
                 MPI_Send(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1, 0, MPI_COMM_WORLD);
-                MPI_Recv(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1, 0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
+                MPI_Recv(my_data.data(), sendCount[ProcRank], MPI_INT, ProcRank - 1,
+                    0, MPI_COMM_WORLD, MPI_STATUSES_IGNORE);
             }
         }
         MPI_Barrier(MPI_COMM_WORLD);
     }
-    MPI_Gatherv(my_data.data(), sendCount[ProcRank], MPI_INT, pData.data(), sendCount.data(), displ.data(), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(my_data.data(), sendCount[ProcRank], MPI_INT, pData.data(), sendCount.data(),
+        displ.data(), MPI_INT, 0, MPI_COMM_WORLD);
     return pData;
 }
