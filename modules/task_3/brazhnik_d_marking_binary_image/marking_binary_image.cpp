@@ -174,7 +174,6 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
     MPI_Comm_size(MPI_COMM_WORLD, &countProc);
     MPI_Comm_rank(MPI_COMM_WORLD, &commRank);
 
-    //countProc = 6;
     // If starting one processing
     if (countProc == 1) {
         return basic_marking_binary_image(data, w, h);
@@ -220,7 +219,7 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
         tmpH = elementsRemaining + sizeBlock * commRank;
     }
 
-    std::pair<std::vector<int>, std::pair<std::vector<int>, int>> stepFirst = step_first(localData, w, tmpW, tmpH);
+    std::pair<std::vector<int>, std::pair<std::vector<int>, int>> stepFirst = step_first(localData, tmpW, tmpH);
 
     std::vector<int> map = stepFirst.first;
     std::vector<int> rastoyanie = stepFirst.second.first;
