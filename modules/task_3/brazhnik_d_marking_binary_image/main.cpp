@@ -51,11 +51,11 @@ TEST(Parallel_Operations_MPI, TEST_BASIC_MARKING_IMAGE_SIZE_5x5_TRUE) {
     };
 
     std::vector<int> resultSecond = set_mark(
-            basic_marking_binary_image(data, sizeX, sizeY).first, 
-            sizeX, 
+            basic_marking_binary_image(data, sizeX, sizeY).first,
+            sizeX,
             sizeY);
 
-    for (int i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++)
         ASSERT_EQ(result[i], resultSecond[i]);
 }
 
@@ -148,7 +148,7 @@ TEST(Parallel_Operations_MPI, TEST_PARALLEL_LARGE_IMAGE_50x50_TIME) {
     double timeParallelStart, timeParallelFinish;
 
     int sizeX = 50;
-    int sizeY = 50 ;
+    int sizeY = 50;
     int size = sizeX * sizeY;
 
     std::vector<int> data(size);

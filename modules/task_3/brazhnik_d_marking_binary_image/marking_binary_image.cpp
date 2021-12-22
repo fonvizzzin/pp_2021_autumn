@@ -15,10 +15,10 @@ std::vector<int> generate_binary_image(int w, int h) {
     throw "Error: Size is small!";
 }
 
-std::pair<std::vector<int>, std::pair<std::vector<int>, int>> step_first(const std::vector<int>& data, int w, int h, int startMarked) {
+std::pair<std::vector<int>, std::pair<std::vector<int>, int>> 
+step_first(const std::vector<int>& data, int w, int h, int startMarked) {
     int size = w * h;
     int markMax = 0;
-
     std::vector<int> nonoverlapping(size);  
     std::vector<int> copyData(data.begin(), data.begin() + size);
 
@@ -30,7 +30,7 @@ std::pair<std::vector<int>, std::pair<std::vector<int>, int>> step_first(const s
     for (int x = 0; x < h; x++) {
         for (int y = 0; y < w; y++) {
             if (copyData[index] != 0) {
-                int left, top; 
+                int left, top;
                 if (index < w) {
                     left = 0;
                 }
@@ -43,10 +43,9 @@ std::pair<std::vector<int>, std::pair<std::vector<int>, int>> step_first(const s
                 else {
                     top = copyData[index - 1];
                 }
-
                 if ((left == 0) && (top == 0)) {
                     copyData[index] = index + 1 + startMarked;
-                    markMax++; 
+                    markMax++;
                 }
                 if ((left == 0) && (top != 0)) {
                     copyData[index] = top;
@@ -63,25 +62,21 @@ std::pair<std::vector<int>, std::pair<std::vector<int>, int>> step_first(const s
                         if (left > top)
                             maxFS = left;
                         else maxFS = top;
-
                         while (nonoverlapping[maxFS - startMarked] != maxFS) {
                             maxFS = nonoverlapping[maxFS - startMarked];
                         }
-
                         int minFS;
                         if (left < top)
                             minFS = left;
-                        else minFS = top; 
+                        else minFS = top;
 
                         while (nonoverlapping[minFS - startMarked] != minFS) {
                             minFS = nonoverlapping[minFS - startMarked];
                         }
-
                         if (maxFS != minFS) {
                             nonoverlapping[maxFS - startMarked] = minFS;
                             markMax--;
                         }
-
                         copyData[index] = minFS;
                     }
                 }
@@ -151,10 +146,10 @@ std::vector<int> set_mark(const std::vector<int>& data, int w, int h) {
         int pixel = data[i];
         if (pixel != 0) {
             int idx = -1;
-            for (int k = 1; badLabels[k] != 0; k++) 
-                if (badLabels[k] == pixel) { 
-                    idx = k; 
-                    break; 
+            for (int k = 1; badLabels[k] != 0; k++)
+                if (badLabels[k] == pixel) {
+                    idx = k;
+                    break;
                 }
             if (idx == -1) {
                 markMax++;
@@ -171,7 +166,6 @@ std::vector<int> set_mark(const std::vector<int>& data, int w, int h) {
 }
 
 std::pair<std::vector<int>, int> basic_marking_binary_image(const std::vector<int>& data, int w, int h) {
-
     std::pair<std::vector<int>, std::pair<std::vector<int>, int>> firstStep = step_first(data, w, h);
     std::vector<int> secondStep = step_second(firstStep.first, w, h, firstStep.second.first);
 
@@ -253,19 +247,17 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
     }
 
     int sendCount = 0;
-    if (commRank == 0) {
+    if (commRank == 0)
         sendCount = sizeBlock + elementsRemaining;
-    }
-    else {
+    else 
         sendCount = sizeBlock;
-    }
 
     std::vector<int> globalRastoyanie(size);
-    MPI_Gatherv(rastoyanie.data(), sendCount, MPI_INT, globalRastoyanie.data(), recvCounts.data(), 
+    MPI_Gatherv(rastoyanie.data(), sendCount, MPI_INT, globalRastoyanie.data(), recvCounts.data(),
         displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
 
     std::vector<int> globalMap(size);
-    MPI_Gatherv(map.data(), sendCount, MPI_INT, globalMap.data(), recvCounts.data(), 
+    MPI_Gatherv(map.data(), sendCount, MPI_INT, globalMap.data(), recvCounts.data(),
         displs.data(), MPI_INT, 0, MPI_COMM_WORLD);
 
     int globalMarkCount = 0;
@@ -289,7 +281,6 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
                         while (globalRastoyanie[maxLT] != maxLT) {
                             maxLT = globalRastoyanie[maxLT];
                         }
-                        
                         int minLT = std::min(left, top);
                         while (globalRastoyanie[minLT] != minLT) {
                             minLT = globalRastoyanie[minLT];
@@ -304,6 +295,5 @@ std::pair<std::vector<int>, int> parallel_marking_binary_image(const std::vector
         }
         result = step_second(globalMap, w, h, globalRastoyanie);
     }
-
     return { result, globalMarkCount };
 }
