@@ -1,4 +1,4 @@
-// Copyright 2021 Lazarev Alexey
+// Copyright 2021 Lazarev Alexey.
 
 #include <gtest/gtest.h>
 
