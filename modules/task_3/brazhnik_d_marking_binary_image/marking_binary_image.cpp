@@ -57,7 +57,7 @@ step_first(const std::vector<int>& data, int w, int h, int startMarked) {
                         int maxFS;
                         if (left > top)
                             maxFS = left;
-                        else 
+                        else
                             maxFS = top;
                         while (nonoverlapping[maxFS - startMarked] != maxFS) {
                             maxFS = nonoverlapping[maxFS - startMarked];
@@ -65,7 +65,7 @@ step_first(const std::vector<int>& data, int w, int h, int startMarked) {
                         int minFS;
                         if (left < top)
                             minFS = left;
-                        else 
+                        else
                             minFS = top;
 
                         while (nonoverlapping[minFS - startMarked] != minFS) {
