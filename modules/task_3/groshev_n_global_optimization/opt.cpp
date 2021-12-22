@@ -2,8 +2,8 @@
 
 #include "../../../modules/task_3/groshev_n_global_optimization/opt.h"
 
-double seq_global_opt(double a, double b, std::function<double(double*)> f,
-                      int part, double eps) {
+double seq_global_opt(double a, double b,
+    std::function<double(double*)> f, int part, double eps) {
   std::vector<double> x;
   int num_max_R = 1;
   double r = 2;
@@ -11,7 +11,7 @@ double seq_global_opt(double a, double b, std::function<double(double*)> f,
 
   x.push_back(a);
   x.push_back(b);
-  double M = abs(f(&x[1]) - f(&x[0])) / (x[1] - x[0]);
+  double M = std::abs(f(&x[1]) - f(&x[0])) / (x[1] - x[0]);
   double m;
   if (M > 0) {
     m = r * M;
@@ -20,13 +20,13 @@ double seq_global_opt(double a, double b, std::function<double(double*)> f,
   }
 
   x.push_back((x[1] + x[0]) / 2 - (f(&x[1]) - f(&x[0])) / (2 * m));
-
-  while (x.size() - 1 < part) {
+  int count = x.size() - 1;
+  while (count < part) {
     sort(x.begin(), x.begin() + x.size());
 
-    M = abs(f(&x[1]) - f(&x[0])) / (x[1] - x[0]);
-    for (int i = 2; i <= x.size() - 1; i++) {
-      M = std::max(M, abs(f(&x[i]) - f(&x[i - 1])) / (x[i] - x[i - 1]));
+    M = std::abs(f(&x[1]) - f(&x[0])) / (x[1] - x[0]);
+    for (int i = 2; i <= count; i++) {
+      M = std::max(M, std::abs(f(&x[i]) - f(&x[i - 1])) / (x[i] - x[i - 1]));
     }
     if (M > 0) {
       m = r * M;
@@ -38,7 +38,7 @@ double seq_global_opt(double a, double b, std::function<double(double*)> f,
         pow((f(&x[1]) - f(&x[0])), 2) / (m * (x[1] - x[0])) -
         2 * (f(&x[1]) + f(&x[0]));
     num_max_R = 1;
-    for (int i = 2; i <= x.size() - 1; ++i) {
+    for (int i = 2; i <= count; ++i) {
       double max_R =
           m * (x[i] - x[i - 1]) +
           std::pow((f(&x[i]) - f(&x[i - 1])), 2) / (m * (x[i] - x[i - 1])) -
@@ -51,6 +51,7 @@ double seq_global_opt(double a, double b, std::function<double(double*)> f,
 
     x.push_back((x[num_max_R] + x[num_max_R - 1]) / 2 -
                 (f(&x[num_max_R]) - f(&x[num_max_R - 1])) / (2 * m));
+    count++;
     if (x[num_max_R] - x[num_max_R - 1] < eps) {
       break;
     }
