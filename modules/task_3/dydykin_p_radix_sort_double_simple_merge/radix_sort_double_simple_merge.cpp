@@ -13,7 +13,7 @@ std::vector<double> Get_Random_Vector(int size) {
     std::mt19937 gen(time(0));
     std::uniform_real_distribution<> urd(0, 10000);
     std::vector<double> vector(size);
-    for (int i = 0; i < vector.size(); i++) {
+    for (int i = 0; i < static_cast<int>(vector.size()); i++) {
         vector[i] = urd(gen);
     }
     return vector;
@@ -45,17 +45,18 @@ std::vector<double> Merge(const std::vector<double>& vec_left,
     std::vector<double> result((vec_left.size() + vec_right.size()));
 
     int i = 0, j = 0, k = 0;
-    while (i < vec_left.size() && j < vec_right.size()) {
+    while (i < static_cast<int>(vec_left.size())
+        && j < static_cast<int>(vec_right.size())) {
         if (vec_left[i] < vec_right[j])
             result[k] = vec_left[i++];
         else
             result[k] = vec_right[j++];
         k++;
     }
-    while (i < vec_left.size()) {
+    while (i < static_cast<int>(vec_left.size())) {
         result[k++] = vec_left[i++];
     }
-    while (j < (vec_right.size())) {
+    while (j < static_cast<int>(vec_right.size())) {
         result[k++] = vec_right[j++];
     }
 
@@ -76,12 +77,12 @@ std::vector<double> RadixSort(const std::vector<double>& vect, int rad) {
     std::vector<double> res;
     std::vector <std::vector<double>> radix(10);
 
-    for (int i = 0; i < vect.size(); i++) {
+    for (int i = 0; i < static_cast<int>(vect.size()); i++) {
         radix[GetDigit(vect[i], rad)].push_back(vect[i]);
     }
 
-    for (int i = 0; i < radix.size(); ++i)
-        for (int j = 0; j < radix[i].size(); ++j)
+    for (int i = 0; i < static_cast<int>(radix.size()); ++i)
+        for (int j = 0; j < static_cast<int>(radix[i].size()); ++j)
             res.push_back(radix[i][j]);
     return res;
 }
@@ -89,14 +90,14 @@ std::vector<double> RadixSort(const std::vector<double>& vect, int rad) {
 std::vector<double> Not_Parallel_Radix_Sort(const std::vector<double>& vect) {
     int radixNegativeZero = 0;
     int maxRadixNegativeZero = RightOfThePoint(vect[0]);
-    for (int i = 1; i < vect.size(); ++i) {
+    for (int i = 1; i < static_cast<int>(vect.size()); ++i) {
         radixNegativeZero = RightOfThePoint(vect[i]);
         if (radixNegativeZero > maxRadixNegativeZero) {
             maxRadixNegativeZero = radixNegativeZero;
         }
     }
     double max = vect[0];
-    for (int i = 1; i < vect.size(); i++) {
+    for (int i = 1; i < static_cast<int>(vect.size()); i++) {
         if (vect[i] > max) {
             max = vect[i];
         }
