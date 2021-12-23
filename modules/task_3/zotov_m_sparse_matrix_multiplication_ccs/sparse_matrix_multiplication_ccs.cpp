@@ -23,7 +23,7 @@ Matrix getRandomMatrix(int sz) {
         matrix.column.push_back(matrix.row.size());
         for (int j = 0; j < sz; j++) {
             int uid_gen = uid(gen);
-            if (uid_gen > 80) {
+            if (uid_gen > 70) {
                 matrix.value.push_back(uid_gen);
                 matrix.row.push_back(j);
                 flag = 1;
@@ -47,7 +47,7 @@ void printMatrix(Matrix& matrix) {
     for (size_t i = 0; i < matrix.size; i++) {
         flag = 0;
         std::cout << std::endl;
-        for (size_t j = 0; j < matrix.size; j++) {
+        for (size_t j = 0; j < matrix.size ; j++) {
             count = 0;
             flag = 0;
             while (count < matrix.column[j + 1] - matrix.column[j]) {
@@ -68,7 +68,41 @@ void printMatrix(Matrix& matrix) {
     }
 }
 
-void printCoef(Matrix& A) {
+Matrix transPosition(Matrix M) {
+    std::vector<double> valueT;
+    std::vector<int>rowT,columnT;
+    int N = M.column.size() - 1;
+
+
+    Matrix C;
+    C.size = M.size;
+    C.value.resize(0);
+    C.row.resize(0);
+    C.column.resize(0);
+    int index = 0;
+    for (int i = 0; i < N; i++) {
+        int j = 0;
+        C.column.push_back(C.row.size());
+        while (j < M.row.size()) {
+            if (i == M.row[j]) {
+                index = 0;
+                C.value.push_back(M.value[j]);
+                while(M.column[index + 1] <= j) {
+                    index++;
+                }
+                C.row.push_back(index);
+            }
+            j++;
+        }
+
+    }
+    C.column.push_back(C.row.size());
+
+    return C;
+
+}
+
+void printCoef( Matrix& A) {
     std::cout << std::endl << "value= ";
     for (int i = 0; i < A.value.size(); i++) {
         std::cout << A.value[i] << " ";
@@ -87,20 +121,21 @@ void printCoef(Matrix& A) {
     std::cout << std::endl;
 }
 
-Matrix multipication(Matrix A, Matrix B) {
+Matrix multiplication(Matrix A, Matrix B) {
     Matrix C;
     if (A.size == B.size) {
         C.size = A.size;
     }
+    A = transPosition(A);
     C.value.resize(0);
     C.row.resize(0);
     C.column.resize(0);
 
     int countA, countB, as, af, bs, bf, sum = 0;
 
-    for (size_t i = 0; i < C.size; i++) {
+    for (int i = 0; i < C.size; i++) {
         C.column.push_back(C.row.size());
-        for (size_t j = 0; j < C.size; j++) {
+        for (int j = 0; j < C.size; j++) {
             as = A.column[i], af = A.column[i + 1];
             bs = B.column[j], bf = B.column[j + 1];
             while (as < af && bs < bf) {
@@ -123,6 +158,9 @@ Matrix multipication(Matrix A, Matrix B) {
             }
         }
     }
+    C.column.push_back(C.row.size());
+
+    C = transPosition(C);
 
     return C;
 }

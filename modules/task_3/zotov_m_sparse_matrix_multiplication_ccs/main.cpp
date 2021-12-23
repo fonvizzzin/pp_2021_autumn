@@ -7,11 +7,23 @@
 
 TEST(Parallel_Operations_MPI, Test_Sum) {
     Matrix A;
+    Matrix B;
+    Matrix C;
 
-    A = getRandomMatrix(5);
+    A = getRandomMatrix(4);
+    B = getRandomMatrix(4);
+    C = getRandomMatrix(4);
 
+    C = multiplication(A, B);
     printMatrix(A);
     printCoef(A);
+    std::cout << "//////////////////////////////////" << std::endl;
+    printMatrix(B);
+    printCoef(B);
+    std::cout << "//////////////////////////////////" << std::endl;
+    printMatrix(C);
+    printCoef(C);
+
 
 
     ASSERT_EQ(1,1);

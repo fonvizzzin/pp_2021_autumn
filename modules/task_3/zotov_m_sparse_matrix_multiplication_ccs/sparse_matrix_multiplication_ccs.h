@@ -21,6 +21,7 @@ Matrix getRandomMatrix(int sz);
 void printMatrix(Matrix& matrix);
 void printCoef(Matrix& A);
 Matrix multiplication(Matrix A, Matrix B);
+Matrix transPosition(Matrix M);
 
 
 
