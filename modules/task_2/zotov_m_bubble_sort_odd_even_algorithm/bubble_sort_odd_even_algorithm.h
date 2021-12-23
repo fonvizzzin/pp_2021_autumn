@@ -3,7 +3,6 @@
 #define MODULES_TASK_2_ZOTOV_M_BUBBLE_SORT_ODD_EVEN_ALGORITHM_BUBBLE_SORT_ODD_EVEN_ALGORITHM_H_
 
 #include <vector>
-#include <string>
 
 std::vector<int> BubbleSortSequential(std::vector<int> pData);
 

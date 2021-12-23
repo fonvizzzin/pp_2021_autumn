@@ -1,7 +1,6 @@
 // Copyright 2021 Zotov Maksim
 #include <mpi.h>
 #include <vector>
-#include <string>
 #include <random>
 #include <algorithm>
 #include <ctime>
