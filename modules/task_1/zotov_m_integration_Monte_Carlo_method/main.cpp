@@ -1,4 +1,4 @@
-/// Copyright 2021 Zotov Maksim
+// Copyright 2021 Zotov Maksim
 #include <gtest/gtest.h>
 #include "./integration_Monte_Carlo_method.h"
 #include <gtest-mpi-listener.hpp>

@@ -1,8 +1,9 @@
 // Copyright 2021 Zotov Maksim
 #include <mpi.h>
-#include <iostream>
 #include <random>
 #include <cmath>
+#include <ctime>
+#include <algorithm>
 #include "../../../modules/task_1/zotov_m_integration_Monte_Carlo_method/integration_Monte_Carlo_method.h"
 
 
@@ -24,10 +25,10 @@ double f5(double x) {
 
 double integralMonteCarlo(double a, double b, int n, double(*f)(double)) {
     std::mt19937 generate;
-    generate.seed(time(NULL));
+    generate.seed(time(0));
     std::uniform_real_distribution<> uid(0, RAND_MAX);
     double res;
-    double x;
+    double x = 0.0;
     double y = 0.0;
 
     for (int i = 0; i < n; i++) {
@@ -40,14 +41,14 @@ double integralMonteCarlo(double a, double b, int n, double(*f)(double)) {
 
 double integralParallel(double a, double b, int n, double(*f)(double)) {
     std::mt19937 generate;
-    generate.seed(time(NULL));
+    generate.seed(time(0));
     std::uniform_real_distribution<> uid(0, RAND_MAX);
 
     int ProcRank, ProcNum;
     MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     double myRes = 0.0, res = 0.0;
-    double x;
+    double x = 0.0;
     double y = 0.0;
 
     for (int i = 0; i < n; i += ProcNum) {
