@@ -67,11 +67,11 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     double t1, t2, t3, t4;
 
-    std::vector<double> v(100);
+    std::vector<double> v(70);
     std::vector<double> not_p_vec, p_vec;
 
     if (ProcRank == 0) {
-        v = Get_Random_Vector(100);
+        v = Get_Random_Vector(70);
         t1 = MPI_Wtime();
         not_p_vec = Not_Parallel_Radix_Sort(v);
         t2 = MPI_Wtime();
@@ -100,11 +100,11 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     double t1, t2, t3, t4;
 
-    std::vector<double> v(1000);
+    std::vector<double> v(100);
     std::vector<double> not_p_vec, p_vec;
 
     if (ProcRank == 0) {
-        v = Get_Random_Vector(1000);
+        v = Get_Random_Vector(100);
         t1 = MPI_Wtime();
         not_p_vec = Not_Parallel_Radix_Sort(v);
         t2 = MPI_Wtime();
