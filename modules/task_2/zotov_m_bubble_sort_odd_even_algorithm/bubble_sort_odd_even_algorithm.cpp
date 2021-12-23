@@ -1,10 +1,10 @@
-// Copyright 2018 Nesterov Alexander
+// Copyright 2021 Zotov Maksim
 #include <mpi.h>
-#include <iostream>
 #include <vector>
 #include <string>
 #include <random>
 #include <algorithm>
+#include <ctime>
 #include "../../../modules/task_2/zotov_m_bubble_sort_odd_even_algorithm/bubble_sort_odd_even_algorithm.h"
 
 
@@ -34,7 +34,7 @@ std::vector<int> BubbleSortSequential(std::vector<int> pData) {
 
 std::vector<int> getRandomVector(int size) {
     std::mt19937 generate;
-    generate.seed(time(NULL));
+    generate.seed(time(0));
     std::uniform_real_distribution<> uid(0, RAND_MAX);
     std::vector<int> tmp;
     for (int i = 0; i < size; i++) {

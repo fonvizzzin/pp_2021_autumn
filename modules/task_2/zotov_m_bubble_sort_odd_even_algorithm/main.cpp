@@ -1,4 +1,4 @@
-// Copyright 2018 Nesterov Alexander
+// Copyright 2021 Zotov Maksim
 #include <gtest/gtest.h>
 #include <vector>
 #include "./bubble_sort_odd_even_algorithm.h"
