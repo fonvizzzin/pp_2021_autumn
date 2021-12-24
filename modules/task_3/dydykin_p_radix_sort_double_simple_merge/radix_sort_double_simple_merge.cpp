@@ -1,13 +1,6 @@
-﻿  // Copyright 2021 Dydykin Pavel
+  // Copyright 2021 Dydykin Pavel
 #include "../../../modules/task_3/dydykin_p_radix_sort_double_simple_merge/radix_sort_double_simple_merge.h"
-#include <mpi.h>
-#include <iostream>
-#include <vector>
-#include <random>
-#include <list>
-#include <string>
-#include <sstream>
-#include <iterator>
+
 
 std::vector<double> Get_Random_Vector(int size) {
     std::mt19937 gen(time(0));
@@ -145,9 +138,10 @@ std::vector<double> Parallel_Radix_Sort(const std::vector<double>& vec) {
     }
 
     MPI_Scatterv(vec.data(), sendcounts.data(), displs.data(),
-        MPI_DOUBLE, &recvbuf[0], count, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_DOUBLE, recvbuf.data(), count, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     recvbuf = Not_Parallel_Radix_Sort(recvbuf);
+
     if (ProcRank != 0) {
         MPI_Send(recvbuf.data(), count, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
     } else {

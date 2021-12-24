@@ -1,11 +1,10 @@
 // Copyright 2021 Dydykin Pavel
 #include <gtest/gtest.h>
 #include <algorithm>
-#include "..//..//..//modules/task_3/dydykin_p_radix_sort_double_simple_merge/radix_sort_double_simple_merge.h"
+#include "../../../modules/task_3/dydykin_p_radix_sort_double_simple_merge/radix_sort_double_simple_merge.h"
 #include <gtest-mpi-listener.hpp>
 
-TEST(Test_Radix_Sort_Double_Simple_Merge,
-    Test1_Not_Parallel_Radix_Sort_Double) {
+TEST(Radix_Sort, Test1_Not_Parallel_Radix_Sort_Double) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -19,8 +18,7 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     }
 }
 
-TEST(Test_Radix_Sort_Double_Simple_Merge,
-    Test2_Parallel_Radix_Sort_Double) {
+TEST(Radix_Sort, Test2_Parallel_Radix_Sort_Double) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -40,8 +38,7 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     }
 }
 
-TEST(Test_Radix_Sort_Double_Simple_Merge,
-    Test3_Not_Parallel_VS_Parallel_With_Small_Vector) {
+TEST(Radix_Sort, Test3_Not_Parallel_VS_Parallel_With_Small_Vector) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
@@ -61,8 +58,7 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     }
 }
 
-TEST(Test_Radix_Sort_Double_Simple_Merge,
-    Test4_Not_Parallel_VS_Parallel_With_Medium_Vector) {
+TEST(Radix_Sort, Test4_Not_Parallel_VS_Parallel_With_Medium_Vector) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     double t1, t2, t3, t4;
@@ -94,8 +90,7 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
     }
 }
 
-TEST(Test_Radix_Sort_Double_Simple_Merge,
-    Test5_Not_Parallel_VS_Parallel_With_Big_Vector_Effiency) {
+TEST(Radix_Sort, Test5_Not_Parallel_VS_Parallel_With_Big_Vector_Effiency) {
     int ProcRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
     double t1, t2, t3, t4;
@@ -124,6 +119,7 @@ TEST(Test_Radix_Sort_Double_Simple_Merge,
         ASSERT_EQ(p_vec, not_p_vec);
         std::cout << "NotParallel " << t2 - t1 << std::endl;
         std::cout << "Parallel " << t4 - t3 << std::endl;
+        std::cout << "Effiency " << (t2 - t1) / (t4 - t3) << std::endl;
     }
 }
 
