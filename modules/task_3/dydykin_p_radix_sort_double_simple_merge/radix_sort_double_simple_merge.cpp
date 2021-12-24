@@ -72,7 +72,6 @@ std::vector<double> RadixSort(const std::vector<double>& vect, int rad) {
     for (int i = 0; i < static_cast<int>(vect.size()); i++) {
         radix[GetDigit(vect[i], rad)].push_back(vect[i]);
     }
-
     for (int i = 0; i < static_cast<int>(radix.size()); ++i)
         for (int j = 0; j < static_cast<int>(radix[i].size()); ++j)
             res.push_back(radix[i][j]);
