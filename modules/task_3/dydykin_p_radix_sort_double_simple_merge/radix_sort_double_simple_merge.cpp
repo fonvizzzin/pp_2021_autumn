@@ -52,7 +52,6 @@ std::vector<double> Merge(const std::vector<double>& vec_left,
     while (j < static_cast<int>(vec_right.size())) {
         result[k++] = vec_right[j++];
     }
-
     return result;
 }
 
