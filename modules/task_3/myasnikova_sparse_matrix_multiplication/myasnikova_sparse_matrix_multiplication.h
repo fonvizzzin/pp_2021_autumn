@@ -1,4 +1,5 @@
 // Copyright 2021 Myasnikova Varvara
+
 #ifndef MODULES_TASK_3_MYASNIKOVA_SPARSE_MATRIX_MULTIPLICATION_MYASNIKOVA_SPARSE_MATRIX_MULTIPLICATION_H_
 #define MODULES_TASK_3_MYASNIKOVA_SPARSE_MATRIX_MULTIPLICATION_MYASNIKOVA_SPARSE_MATRIX_MULTIPLICATION_H_
 
@@ -17,7 +18,7 @@ struct SparseMatrix {
     const SparseMatrix& B);
 };
 
-SparseMatrix CCS(const std::vector<double> new_matrix,
+SparseMatrix CCS(const std::vector<double>& new_matrix,
   const int new_columns, const int new_rows);
 
 std::vector<double> Multiply(SparseMatrix A, SparseMatrix B);

@@ -1,4 +1,5 @@
 // Copyright 2021 Myasnikova Varvara
+
 #include "../../../modules/task_3/myasnikova_sparse_matrix_multiplication/myasnikova_sparse_matrix_multiplication.h"
 #include <mpi.h>
 #include <ctime>
@@ -6,7 +7,7 @@
 #include <vector>
 
 // Converting a matrix to columnar storage
-SparseMatrix CCS(const std::vector<double> new_matrix, const int new_columns,
+SparseMatrix CCS(const std::vector<double>& new_matrix, const int new_columns,
   const int new_rows) {
   SparseMatrix result;
   result.columns = new_columns;
