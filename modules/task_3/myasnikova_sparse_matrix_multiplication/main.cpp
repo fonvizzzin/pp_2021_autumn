@@ -81,7 +81,6 @@ TEST(CCS_Matrix_mult, Random_50x50) {
 
 TEST(CCS_Matrix_mult, Random_75x75) {
   int ProcRank;
-  double t1, t2;
   MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
   SparseMatrix A, B;

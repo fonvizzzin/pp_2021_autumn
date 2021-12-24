@@ -11,7 +11,7 @@ struct SparseMatrix {
   std::vector<int> col_ptr;
   // Lowercase indexes for each column of the matrix
   std::vector<int> row_index;
-  int columns, rows, non_zero;
+  int columns = 0, rows = 0, non_zero = 0;
 
   friend const std::vector<double> operator*(const SparseMatrix& A,
     const SparseMatrix& B);
