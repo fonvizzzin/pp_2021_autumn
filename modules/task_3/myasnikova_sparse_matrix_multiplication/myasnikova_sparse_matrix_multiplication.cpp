@@ -103,6 +103,7 @@ std::vector<double> Multiply(SparseMatrix A, SparseMatrix B) {
       // the rest of the processes get an empty vector to get something,
       // in order to avoid an error
       return std::vector<double>();
+    }
   }
 
   if (ProcRank != 0) {

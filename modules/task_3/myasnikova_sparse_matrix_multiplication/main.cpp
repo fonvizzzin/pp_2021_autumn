@@ -97,34 +97,6 @@ TEST(CCS_Matrix_mult, Random_75x75) {
   }
 }
 
-/*
-TEST(CCS_Matrix_mult, random_300x300) {
-  int ProcRank;
-  double t1, t2;
-  MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
-
-  SparseMatrix A, B;
-  if (ProcRank == 0) {
-    A = CCS(RandMatrix(300, 300), 300, 300);
-    B = CCS(RandMatrix(300, 300), 300, 300);
-  }
-
-  t1 = MPI_Wtime();
-  std::vector<double> result = Multiply(A, B);
-  t2 = MPI_Wtime();
-
-  if (ProcRank == 0) {
-    std::cout << "Parr time: " << t2 - t1 << "\n";
-
-    t1 = MPI_Wtime();
-    std::vector<double> exp_result = A * B;
-    t2 = MPI_Wtime();
-    std::cout << "Seq time: " << t2 - t1 << "\n";
-    ASSERT_EQ(result, exp_result);
-  }
-}
-*/
-
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   MPI_Init(&argc, &argv);
