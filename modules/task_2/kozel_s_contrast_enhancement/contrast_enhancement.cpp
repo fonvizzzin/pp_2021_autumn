@@ -20,7 +20,7 @@ vecI randomIMG(int w, int h) {
     return img;
 }
 
-void printIMG(vecI& img, int w, int h) {
+void printIMG(const vecI& img, int w, int h) {
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
             int val = img[y * h + x];
@@ -41,7 +41,7 @@ int barrier(int pixel) {
     return pixel;
 }
 
-vecI contrastEnhancementSeq(vecI& img, int w, int  h, int corr) {
+vecI contrastEnhancementSeq(const vecI& img, int w, int  h, int corr) {
     if (corr == 0) return img;
     int size = h * w;
     // 1
@@ -62,7 +62,7 @@ vecI contrastEnhancementSeq(vecI& img, int w, int  h, int corr) {
     return result;
 }
 
-vecI contrastEnhancementPar(vecI& img, int w, int  h, int corr) {
+vecI contrastEnhancementPar(vecI img, int w, int  h, int corr) {
     int procRank, procCount;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
     MPI_Comm_size(MPI_COMM_WORLD, &procCount);
