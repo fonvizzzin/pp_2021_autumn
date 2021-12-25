@@ -185,7 +185,6 @@ TEST(Gather_TEST, MPI_INT_TEST_BIG) {
 
 TEST(Gather_TEST, MPI_ERR) {
   int Rank, Size, root;
-  double T1, T2;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
   MPI_Comm_size(MPI_COMM_WORLD, &Size);
