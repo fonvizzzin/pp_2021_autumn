@@ -94,10 +94,12 @@ std::vector<point> parallelJarvisPass(const std::vector<point>& points, const in
         }
         if ((procNum != 1) && (remainingData != 0)) {
             partOfPoints = std::vector<point>(points.begin() +
-                (dataPiece * procNum), points.end());
+               (procNum * dataPiece), points.end());
             result = jarvisPass(partOfPoints);
-            for (std::vector<point>::size_type i = 0; i < result.size(); i++) {
-                partJarvisPass.push_back(result[i]);
+            std::vector<int>::size_type oldPartJarvisPassSize = partJarvisPass.size();
+            partJarvisPass.resize(oldPartJarvisPassSize + result.size());
+            for (std::vector<int>::size_type i = oldPartJarvisPassSize, j = 0; i < partJarvisPass.size(); i++, j++) {
+                partJarvisPass[i] = result[j];
             }
         }
         result = jarvisPass(partJarvisPass);
