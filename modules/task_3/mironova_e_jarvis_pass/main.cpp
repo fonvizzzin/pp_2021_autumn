@@ -4,9 +4,9 @@
 #include <gtest-mpi-listener.hpp>
 
 
-TEST(MPI_TASK_3, work_correct_with_1000_points) {
+TEST(MPI_TASK_3, work_correct_with_100_points) {
     std::vector<point> points;
-    int size = 1000;
+    int size = 100;
     std::vector<point> result1, result2;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
@@ -23,9 +23,9 @@ TEST(MPI_TASK_3, work_correct_with_1000_points) {
     }
 }
 
-TEST(MPI_TASK_3, work_correct_with_1001_points) {
+TEST(MPI_TASK_3, work_correct_with_101_points) {
     std::vector<point> points;
-    int size = 1001;
+    int size = 101;
     std::vector<point> result1, result2;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
@@ -42,9 +42,9 @@ TEST(MPI_TASK_3, work_correct_with_1001_points) {
     }
 }
 
-TEST(MPI_TASK_3, work_correct_with_1005_points) {
+TEST(MPI_TASK_3, work_correct_with_105_points) {
     std::vector<point> points;
-    int size = 1005;
+    int size = 105;
     std::vector<point> result1, result2;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
@@ -61,9 +61,9 @@ TEST(MPI_TASK_3, work_correct_with_1005_points) {
     }
 }
 
-TEST(MPI_TASK_3, work_correct_with_1009_points) {
+TEST(MPI_TASK_3, work_correct_with_109_points) {
     std::vector<point> points;
-    int size = 1009;
+    int size = 109;
     std::vector<point> result1, result2;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
@@ -80,9 +80,9 @@ TEST(MPI_TASK_3, work_correct_with_1009_points) {
     }
 }
 
-TEST(MPI_TASK_3, work_correct_with_1200_points) {
+TEST(MPI_TASK_3, work_correct_with_150_points) {
     std::vector<point> points;
-    int size = 1200;
+    int size = 150;
     std::vector<point> result1, result2;
     int procRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
