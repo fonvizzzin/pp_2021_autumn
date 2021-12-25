@@ -77,14 +77,14 @@ TEST(TEST_TOPOLOGY, correct_paired_sending) {
     if (ProcNum == 1) {
         ASSERT_TRUE(true);
     } else {
-        int received_node_coords[2] = { ProcNum / 2, ProcNum - 1 };
+        int receiving_node[2] = { ProcNum / 2, ProcNum - 1 };
         if (ProcRank == 0) {
             message_real = 5;
-            MPI_Send(&message_real, 1, MPI_INT, received_node_coords[0], 1, grid_torus_comm);
-            if (received_node_coords[0] != received_node_coords[1])
-                MPI_Send(&message_real, 1, MPI_INT, received_node_coords[1], 1, grid_torus_comm);
+            MPI_Send(&message_real, 1, MPI_INT, receiving_node[0], 1, grid_torus_comm);
+            if (receiving_node[0] != receiving_node[1])
+                MPI_Send(&message_real, 1, MPI_INT, receiving_node[1], 1, grid_torus_comm);
         } else {
-            if ((ProcRank == received_node_coords[0]) || (ProcRank == received_node_coords[1])) {
+            if ((ProcRank == receiving_node[0]) || (ProcRank == receiving_node[1])) {
                 MPI_Status status;
                 MPI_Recv(&message_real, 1, MPI_INT, 0, 1, grid_torus_comm, &status);
                 ASSERT_EQ(message_real, message);
