@@ -54,8 +54,7 @@ std::vector<point> jarvisPass(const std::vector<point>& points) {
         }
         if (vectorOfIndex[right] == result[0]) {
             break;
-        }
-        else {
+        } else {
             result.push_back(vectorOfIndex[right]);
             vectorOfIndex.erase(vectorOfIndex.begin() + right);
         }
@@ -82,8 +81,7 @@ std::vector<point> parallelJarvisPass(const std::vector<point>& points, const in
     partJarvisPass = jarvisPass(partOfPoints);
     if (procRank != 0) {
         MPI_Send(partJarvisPass.data(), partJarvisPass.size(), struct_point, 0, 0, MPI_COMM_WORLD);
-    }
-    else {
+    } else {
         for (int i = 1; i < procNum; i++) {
             MPI_Status status;
             int sendElements = 0;

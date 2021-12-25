@@ -6,7 +6,6 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-#include <stddef.h>
 #include <numeric>
 
 struct point {
