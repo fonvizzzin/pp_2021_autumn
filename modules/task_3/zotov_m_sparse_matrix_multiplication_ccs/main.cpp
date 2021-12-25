@@ -9,23 +9,69 @@ TEST(Parallel_Operations_MPI, Test_Sum) {
     Matrix A;
     Matrix B;
     Matrix C;
-
-    A = getRandomMatrix(4);
-    B = getRandomMatrix(4);
-    C = getRandomMatrix(4);
-
-    C = multiplication(A, B);
-    printMatrix(A);
-    printCoef(A);
-    std::cout << "//////////////////////////////////" << std::endl;
-    printMatrix(B);
-    printCoef(B);
-    std::cout << "//////////////////////////////////" << std::endl;
-    printMatrix(C);
-    printCoef(C);
+    Matrix D;
+    Matrix G1;
+    Matrix G2;
+    int ProcRank, ProcNum;
+    double t1, t2;
 
 
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 
+    //A = getRandomMatrix(4);
+    //B = getRandomMatrix(4);
+
+    A.value = { 1,3,4,8 };
+    A.row = { 0,1,1,3 };
+    A.column = { 0,1,1,2,4 };
+    A.size = 4;
+
+    B.value = { 2,4,6,3,2,5 };
+    B.row = { 0,3,2,0,3,1 };
+    B.column = { 0,2,3,5,6 };
+    B.size = 4;
+    C = getRandomMatrix(100);
+    D = getRandomMatrix(100);
+    
+    if (ProcRank == 0) {
+        t1 = MPI_Wtime();
+    }
+    
+    if (ProcRank == 0) {
+        G1 = multiplication(C,D);
+    }
+    
+
+    if (ProcRank == 0) {
+        t2 = MPI_Wtime();
+    }
+    if (ProcRank == 0) {
+        //printMatrix(G1);
+        //printCoef(G1);
+    }
+
+    if (ProcRank == 0) {
+        std::cout << "//////////////////////////////////" << std::endl;
+        //printMatrix(G2);
+        //printCoef(G2);
+        std::cout << std::endl << t2 - t1 << std::endl;
+    }
+    if (ProcRank == 0) {
+        t1 = MPI_Wtime();
+    }
+
+    G2 = parallelMultiplication(C,D);
+
+    if (ProcRank == 0) {
+        t2 = MPI_Wtime();
+        std::cout << std::endl << t2 - t1 << std::endl;
+    }
+    if (ProcRank == 0) {
+        //printMatrix(G2);
+        //printCoef(G2);
+    }
+    
     ASSERT_EQ(1,1);
 }
 

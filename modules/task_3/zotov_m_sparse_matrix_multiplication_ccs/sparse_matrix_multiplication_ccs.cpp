@@ -8,35 +8,59 @@
 
 
 Matrix getRandomMatrix(int sz) {
+    
     Matrix matrix;
     matrix.size = sz;
     matrix.value.resize(0);
     matrix.row.resize(0);
     matrix.column.resize(0);
+    int row_size, value_size;
     int flag = 0;
+    int ProcRank;
 
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    std::uniform_real_distribution<> uid(0, 100);
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-    for (int i = 0; i < sz; i++) {
-        matrix.column.push_back(matrix.row.size());
-        for (int j = 0; j < sz; j++) {
-            int uid_gen = uid(gen);
-            if (uid_gen > 70) {
-                matrix.value.push_back(uid_gen);
-                matrix.row.push_back(j);
-                flag = 1;
+    if (ProcRank == 0) {
+        std::random_device dev;
+        std::mt19937 gen(dev());
+        std::uniform_real_distribution<> uid(0, 100);
+
+        for (int i = 0; i < sz; i++) {
+            matrix.column.push_back(matrix.row.size());
+            for (int j = 0; j < sz; j++) {
+                int uid_gen = uid(gen);
+                if (uid_gen > 70) {
+                    matrix.value.push_back(uid_gen);
+                    matrix.row.push_back(j);
+                    flag = 1;
+                }
             }
+            if (flag == 0) {
+                int uid_gen = uid(gen);
+                matrix.value.push_back(uid_gen);
+                matrix.row.push_back(i);
+            }
+            flag = 0;
         }
-        if (flag == 0) {
-            int uid_gen = uid(gen);
-            matrix.value.push_back(uid_gen);
-            matrix.row.push_back(i);
-        }
-        flag = 0;
+        matrix.column.push_back(matrix.row.size());
+
+        row_size = matrix.row.size();
+        value_size = matrix.value.size();
     }
-    matrix.column.push_back(matrix.row.size());
+
+    MPI_Bcast(&row_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&value_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (ProcRank > 0) {
+        matrix.size = sz;
+        matrix.value.resize(value_size);
+        matrix.row.resize(row_size);
+        matrix.column.resize(sz + 1);
+    }
+    MPI_Bcast(matrix.value.data(), value_size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(matrix.row.data(), row_size, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(matrix.column.data(), sz + 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&matrix.size, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     return matrix;
 }
@@ -102,6 +126,203 @@ Matrix transPosition(Matrix M) {
 
 }
 
+
+Matrix parallelTransPosition(Matrix M) {
+    std::vector<double> valueT;
+    std::vector<int>rowT, columnT;
+    int size = M.size;
+    std::vector<double> local_data(size * size,0);
+    std::vector<double> global_data(size * size);
+    int ProcRank, ProcNum;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    Matrix C;
+    
+    C.size = M.size;
+    C.value.resize(M.value.size());
+    C.row.resize(M.row.size());
+    C.column.resize(M.column.size());
+    
+    rowT.resize(C.row.size());
+    valueT.resize(C.value.size());
+
+
+    int index = 0;
+    for (int i = ProcRank; i < size; i += ProcNum) {
+        int j = 0;
+        while (j < M.row.size()) {
+            if (i == M.row[j]) {
+
+                index = 0;
+
+                while (M.column[index + 1] <= j) {
+                    index++;
+                }
+                local_data[i * size + index] = M.value[j];
+            }
+
+            j++;
+        }
+
+    }
+
+
+    MPI_Reduce(local_data.data(), global_data.data(), size * size, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Bcast(global_data.data(), size * size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    
+    if (ProcRank == 0) {
+        int sum = 0;
+        for (int i = 0; i < size; i++) {
+            C.column[i] = sum;
+            for (int j = 0; j < size; j++) {
+                if (global_data[i * size + j] != 0) {
+                    sum++;
+                }
+            }
+        }
+        C.column[size] = sum;
+    }
+
+
+    MPI_Bcast(C.column.data(), C.column.size(), MPI_INT, 0, MPI_COMM_WORLD);
+    int k, as, bs;
+    for (int i = ProcRank; i < size; i += ProcNum) {
+        as = C.column[i];
+        bs = C.column[i + 1];
+        k = 0;
+        while (bs - as > 0) {
+            while ( k < size) {
+                if (local_data[i * size + k] != 0) {
+                    valueT[as] = local_data[i * size + k];
+                    rowT[as] = k;
+                    as++;
+                }
+                
+                k++;
+            }
+            //as++;
+        }
+    }
+    MPI_Reduce(valueT.data(), C.value.data(), valueT.size(), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(rowT.data(), C.row.data(), rowT.size(), MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    return C;
+
+
+
+}
+
+Matrix parallelMultiplication(Matrix A, Matrix B) {
+    Matrix C;
+    if (A.size == B.size) {
+        C.size = A.size;
+    }
+    A = parallelTransPosition(A);
+
+    MPI_Bcast(A.value.data(), 6, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(A.row.data(), 6, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(A.column.data(), 5, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&A.size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+
+    C.value.resize(0);
+    C.row.resize(0);
+    C.column.resize(A.column.size());
+    int count = 0;
+
+    std::vector<double> valueT;
+    std::vector<int>rowT, columnT;
+
+    int size = C.size;
+    std::vector<double> local_data(size * size);
+    std::vector<double> global_data(size * size);
+
+    int ProcRank, ProcNum;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+    MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
+
+    int as, af, bs, bf,my_count = 0, sum = 0;
+
+    for (int i = ProcRank; i < size; i += ProcNum) {
+        for (int j = 0; j < size; j++) {
+            as = A.column[j], af = A.column[j + 1];
+            bs = B.column[i], bf = B.column[i + 1];
+
+            while (as < af && bs < bf) {
+                if (A.row[as] < B.row[bs]) {
+                    as++;
+                }
+                else if (A.row[as] > B.row[bs]) {
+                    bs++;
+                }
+                else if (A.row[as] == B.row[bs]) {
+                    sum += A.value[as] * B.value[bs];
+                    as++;
+                    bs++;
+                }
+            }
+            if (sum != 0) {
+                local_data[i * size + j] = sum;
+                my_count++;
+                sum = 0;
+            }
+        }
+    }
+
+    MPI_Reduce(local_data.data(), global_data.data(), size * size, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&my_count, &count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&count, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    C.value.resize(count);
+    C.row.resize(count);
+    valueT.resize(count);
+    rowT.resize(count);
+
+
+    if (ProcRank == 0) {
+        int sum = 0;
+        for (int i = 0; i < size; i++) {
+            C.column[i] = sum;
+            for (int j = 0; j < size; j++) {
+                if (global_data[i * size + j] != 0) {
+                    sum++;
+                }
+            }
+        }
+        C.column[size] = sum;
+    }
+
+    MPI_Bcast(C.column.data(), C.column.size(), MPI_INT, 0, MPI_COMM_WORLD);
+
+    int k, AS, BS;
+    for (int i = ProcRank; i < size; i += ProcNum) {
+        AS = C.column[i];
+        BS = C.column[i + 1];
+        k = 0;
+        while (BS - AS > 0) {
+            while (k < size) {
+                if (local_data[i * size + k] != 0) {
+                    valueT[AS] = local_data[i * size + k];
+                    rowT[AS] = k;
+                    AS++;
+                }
+
+                k++;
+            }
+            
+        }
+    }
+    MPI_Reduce(valueT.data(), C.value.data(), valueT.size(), MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(rowT.data(), C.row.data(), rowT.size(), MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    return C;
+
+
+}
+
 void printCoef( Matrix& A) {
     std::cout << std::endl << "value= ";
     for (int i = 0; i < A.value.size(); i++) {
@@ -131,13 +352,13 @@ Matrix multiplication(Matrix A, Matrix B) {
     C.row.resize(0);
     C.column.resize(0);
 
-    int countA, countB, as, af, bs, bf, sum = 0;
+    int as, af, bs, bf, sum = 0;
 
     for (int i = 0; i < C.size; i++) {
         C.column.push_back(C.row.size());
         for (int j = 0; j < C.size; j++) {
-            as = A.column[i], af = A.column[i + 1];
-            bs = B.column[j], bf = B.column[j + 1];
+            as = A.column[j], af = A.column[j + 1];
+            bs = B.column[i], bf = B.column[i + 1];
             while (as < af && bs < bf) {
                 if (A.row[as] < B.row[bs]) {
                     as++;
@@ -160,69 +381,7 @@ Matrix multiplication(Matrix A, Matrix B) {
     }
     C.column.push_back(C.row.size());
 
-    C = transPosition(C);
+    //C = transPosition(C);
 
     return C;
 }
-
-/*
-std::vector<int> getRandomVector(int sz) {
-    std::random_device dev;
-    std::mt19937 gen(dev());
-    std::vector<int> vec(sz);
-    for (int  i = 0; i < sz; i++) { vec[i] = gen() % 100; }
-    return vec;
-}
-
-int getSequentialOperations(std::vector<int> vec, const std::string& ops) {
-    const int  sz = vec.size();
-    int reduction_elem = 0;
-    if (ops == "+") {
-        for (int  i = 0; i < sz; i++) {
-            reduction_elem += vec[i];
-        }
-    } else if (ops == "-") {
-        for (int  i = 0; i < sz; i++) {
-            reduction_elem -= vec[i];
-        }
-    } else if (ops == "max") {
-        reduction_elem = vec[0];
-        for (int  i = 1; i < sz; i++) {
-            reduction_elem = std::max(reduction_elem, vec[i]);
-        }
-    }
-    return reduction_elem;
-}
-
-int getParallelOperations(std::vector<int> global_vec,
-                          int count_size_vector, const std::string& ops) {
-    int size, rank;
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    const int delta = count_size_vector / size;
-
-    if (rank == 0) {
-        for (int proc = 1; proc < size; proc++) {
-            MPI_Send(global_vec.data() + proc * delta, delta,
-                        MPI_INT, proc, 0, MPI_COMM_WORLD);
-        }
-    }
-
-    std::vector<int> local_vec(delta);
-    if (rank == 0) {
-        local_vec = std::vector<int>(global_vec.begin(),
-                                     global_vec.begin() + delta);
-    } else {
-        MPI_Status status;
-        MPI_Recv(local_vec.data(), delta, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
-    }
-
-    int global_sum = 0;
-    int local_sum = getSequentialOperations(local_vec, ops);
-    MPI_Op op_code = MPI_OP_NULL;
-    if (ops == "+" || ops == "-") { op_code = MPI_SUM; }
-    if (ops == "max") { op_code = MPI_MAX; }
-    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, op_code, 0, MPI_COMM_WORLD);
-    return global_sum;
-}
-*/

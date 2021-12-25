@@ -22,8 +22,10 @@ void printMatrix(Matrix& matrix);
 void printCoef(Matrix& A);
 Matrix multiplication(Matrix A, Matrix B);
 Matrix transPosition(Matrix M);
+Matrix parallelTransPosition(Matrix M);
+Matrix parallelMultiplication(Matrix A, Matrix B);
 
-
+void check();
 
 /*
 std::vector<int> getRandomVector(int  sz);
