@@ -1,6 +1,6 @@
 // Copyright 2021 Fedoseev Mikhail
 
-#include "../../../modules/task_3/fedoseyev_m_sobel/sobel.h"
+#include "../../../modules/task_3/fedoseev_m_sobel/sobel.h"
 
 #include <mpi.h>
 
