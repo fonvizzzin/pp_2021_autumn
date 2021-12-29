@@ -1,6 +1,6 @@
-// Copyright 2018 Nesterov Alexander
-#ifndef MODULES_TASK_1_NESTEROV_A_TEST_TASK_1_OPS_MPI_H_
-#define MODULES_TASK_1_NESTEROV_A_TEST_TASK_1_OPS_MPI_H_
+// Copyright 2021 Zotov Maksim
+#ifndef MODULES_TASK_3_ZOTOV_MAKSIM_SPARSE_MATRIX_MULTIPLICATION_CCS_SPARSE_MATRIX_MULTIPLICATION_CCS_H_
+#define MODULES_TASK_3_ZOTOV_MAKSIM_SPARSE_MATRIX_MULTIPLICATION_CCS_SPARSE_MATRIX_MULTIPLICATION_CCS_H_
 
 #include <vector>
 #include <string>
@@ -8,29 +8,15 @@
 #include <random>
 
 struct Matrix {
-
     int size;
     std::vector<double> value;
     std::vector<int>row, column;
-
-
-
 };
-Matrix getRandomMatrix(int sz);
 
-void printMatrix(Matrix& matrix);
-void printCoef(Matrix& A);
-Matrix multiplication(Matrix A, Matrix B);
+Matrix getRandomMatrix(int sz);
+std::vector<double> multiplication(Matrix A, Matrix B);
 Matrix transPosition(Matrix M);
 Matrix parallelTransPosition(Matrix M);
-Matrix parallelMultiplication(Matrix A, Matrix B);
+std::vector<double> parallelMultiplication(Matrix A, Matrix B);
 
-void check();
-
-/*
-std::vector<int> getRandomVector(int  sz);
-int getParallelOperations(std::vector<int> global_vec,
-                          int count_size_vector, const std::string& ops);
-int getSequentialOperations(std::vector<int> vec, const std::string& ops);
-*/
-#endif  // MODULES_TASK_1_NESTEROV_A_TEST_TASK_1_OPS_MPI_H_
+#endif  // MODULES_TASK_3_ZOTOV_MAKSIM_SPARSE_MATRIX_MULTIPLICATION_CCS_SPARSE_MATRIX_MULTIPLICATION_CCS_H_
