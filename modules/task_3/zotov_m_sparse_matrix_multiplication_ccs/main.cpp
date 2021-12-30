@@ -113,7 +113,7 @@ TEST(Parallel_Operations_MPI, parallel_100_x_100_test) {
     C = getRandomMatrix(100);
     D = getRandomMatrix(100);
     if (ProcRank == 0) {
-        seq_vec = multiplication(C,D);
+        seq_vec = multiplication(C, D);
     }
     par_vec = parallelMultiplication(C, D);
 
