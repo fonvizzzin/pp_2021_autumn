@@ -12,7 +12,7 @@ Matrix getRandomMatrix(int sz) {
     matrix.value.resize(0);
     matrix.row.resize(0);
     matrix.column.resize(0);
-    int row_size = 0, value_size = 0 ;
+    int row_size = 0, value_size = 0;
     int ProcRank;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
@@ -54,7 +54,7 @@ Matrix getRandomMatrix(int sz) {
 
 Matrix transPosition(Matrix M) {
     std::vector<double> valueT;
-    std::vector<int>rowT,columnT;
+    std::vector<int>rowT, columnT;
     int N = M.column.size() - 1;
 
     Matrix C;
@@ -66,11 +66,11 @@ Matrix transPosition(Matrix M) {
     for (int i = 0; i < N; i++) {
         int j = 0;
         C.column.push_back(C.row.size());
-        while (j < M.row.size()) {
+        while (j < static_cast<int>(M.row.size())) {
             if (i == M.row[j]) {
                 index = 0;
                 C.value.push_back(M.value[j]);
-                while(M.column[index + 1] <= j) {
+                while (M.column[index + 1] <= j) {
                     index++;
                 }
                 C.row.push_back(index);
@@ -104,7 +104,7 @@ Matrix parallelTransPosition(Matrix M) {
     int index = 0;
     for (int i = ProcRank; i < size; i += ProcNum) {
         int j = 0;
-        while (j < M.row.size()) {
+        while (j < static_cast<int>(M.row.size())) {
             if (i == M.row[j]) {
                 index = 0;
                 while (M.column[index + 1] <= j) {
@@ -114,11 +114,9 @@ Matrix parallelTransPosition(Matrix M) {
             }
             j++;
         }
-
     }
 
     MPI_Reduce(local_data.data(), global_data.data(), size * size, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
- 
     if (ProcRank == 0) {
         int sum = 0;
         for (int i = 0; i < size; i++) {
@@ -139,13 +137,12 @@ Matrix parallelTransPosition(Matrix M) {
         bs = C.column[i + 1];
         k = 0;
         while (bs - as > 0) {
-            while ( k < size) {
+            while (k < size) {
                 if (local_data[i * size + k] != 0) {
                     valueT[as] = local_data[i * size + k];
                     rowT[as] = k;
                     as++;
                 }
-                
                 k++;
             }
         }
@@ -166,7 +163,7 @@ std::vector<double> parallelMultiplication(Matrix A, Matrix B) {
     int size = C.size;
     int ProcRank, ProcNum;
 
-    int as, af, bs, bf,count = 0, my_count = 0, sum = 0;
+    int as, af, bs, bf, count = 0, my_count = 0, sum = 0;
 
     std::vector<double> local_data(size * size);
     std::vector<double> global_data(size * size);
@@ -221,11 +218,9 @@ std::vector<double> multiplication(Matrix A, Matrix B) {
             while (as < af && bs < bf) {
                 if (A.row[as] < B.row[bs]) {
                     as++;
-                }
-                else if (A.row[as] > B.row[bs]) {
+                } else if (A.row[as] > B.row[bs]) {
                     bs++;
-                }
-                else if (A.row[as] == B.row[bs]) {
+                } else if (A.row[as] == B.row[bs]) {
                     sum += A.value[as] * B.value[bs];
                     as++;
                     bs++;

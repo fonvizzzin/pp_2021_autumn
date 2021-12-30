@@ -43,9 +43,9 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_test) {
     A.column = { 0, 1, 1, 2, 4 };
     A.size = 4;
 
-    B.value = { 2,4,6,3,2,5 };
-    B.row = { 0,3,2,0,3,1 };
-    B.column = { 0,2,3,5,6 };
+    B.value = { 2, 4, 6, 3, 2, 5 };
+    B.row = { 0, 3, 2, 0, 3, 1 };
+    B.column = { 0, 2, 3, 5, 6 };
     B.size = 4;
 
     par_vec = multiplication(A, B);
@@ -67,13 +67,10 @@ TEST(Parallel_Operations_MPI, parallel_5_x_5_test) {
 
     C = getRandomMatrix(5);
     D = getRandomMatrix(5);
-
     if (ProcRank == 0) {
         seq_vec = multiplication(C, D);
     }
-
     par_vec = parallelMultiplication(C, D);
-
     if (ProcRank == 0) {
         ASSERT_EQ(seq_vec, par_vec);
     }
@@ -92,11 +89,9 @@ TEST(Parallel_Operations_MPI, parallel_10_x_10_test) {
 
     C = getRandomMatrix(10);
     D = getRandomMatrix(10);
-
     if (ProcRank == 0) {
         seq_vec = multiplication(C, D);
     }
-
     par_vec = parallelMultiplication(C, D);
 
     if (ProcRank == 0) {
@@ -117,11 +112,9 @@ TEST(Parallel_Operations_MPI, parallel_100_x_100_test) {
 
     C = getRandomMatrix(100);
     D = getRandomMatrix(100);
-    
     if (ProcRank == 0) {
         seq_vec = multiplication(C,D);
     }
-
     par_vec = parallelMultiplication(C, D);
 
     if (ProcRank == 0) {
