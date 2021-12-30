@@ -48,7 +48,7 @@ TEST(Parallel_Operations_MPI, parallel_multiplication_test) {
     B.column = { 0, 2, 3, 5, 6 };
     B.size = 4;
 
-    par_vec = multiplication(A, B);
+    par_vec = parallelMultiplication(A, B);
     if (ProcRank == 0) {
         ASSERT_EQ(exp_vec, par_vec);
     }
